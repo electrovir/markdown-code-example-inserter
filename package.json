@@ -22,7 +22,15 @@
         "test": "virmator test",
         "test:full": "npm test && npm run spellcheck && virmator format check"
     },
+    "dependencies": {
+        "fs-extra": "^10.0.0",
+        "rehype-parse": "^7.0.1",
+        "remark-rehype": "^8.1.0",
+        "unified": "^9.2.2"
+    },
     "devDependencies": {
+        "@types/fs-extra": "^9.0.13",
+        "@types/node": "^16.10.3",
         "virmator": "^1.2.0"
     }
 }

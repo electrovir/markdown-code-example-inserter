@@ -1,0 +1,4 @@
+{
+    "name": "full-package-example",
+    "main": "dist/index.js"
+}
