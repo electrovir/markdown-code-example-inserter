@@ -1,11 +1,12 @@
 import type {Comment} from 'hast';
 import type {Node} from 'unist';
+import {RequiredAndNotNullBy} from '../augments/type';
 import {linkCommentTriggerPhrase, startsWithTriggerPhraseRegExp} from '../trigger-phrase';
 import {isComment, parseMarkdownFileContents} from './parse-markdown';
 import {walk} from './walk';
 
 export type CodeExampleLink = {
-    node: Comment;
+    node: Readonly<RequiredAndNotNullBy<Comment, 'position'>>;
     linkPath: string;
 };
 
@@ -25,8 +26,11 @@ export function extractLinks(
     });
 
     return comments.map((comment): CodeExampleLink => {
+        if (!comment.position) {
+            throw new Error(`Comment node "${comment.value}" did not contain position`);
+        }
         return {
-            node: comment,
+            node: comment as CodeExampleLink['node'],
             linkPath: comment.value.trim().replace(startsWithTriggerPhraseRegExp, '').trim(),
         };
     });

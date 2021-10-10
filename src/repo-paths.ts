@@ -15,3 +15,9 @@ export const noSourceCodeFiles = {
 };
 
 export const fullPackageExampleDir = join(testReposDir, 'full-package-example');
+
+export const extendingTsConfigDir = join(testReposDir, 'extending-ts-config');
+export const extendingTsConfigFiles = {
+    sourceDir: join(extendingTsConfigDir, 'src'),
+    distDir: join(extendingTsConfigDir, 'dist'),
+};

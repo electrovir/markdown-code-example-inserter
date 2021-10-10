@@ -1,0 +1,5 @@
+{
+    "name": "extending-ts-config",
+    "private": true,
+    "main": "dist/index.js"
+}

@@ -1,3 +1,4 @@
+import {join} from 'path';
 import {testGroup} from 'test-vir';
 import {fullPackageExampleDir, noSourceCodeDir} from '../repo-paths';
 import {readPackageDetails} from './parse-package-json';
@@ -8,7 +9,7 @@ testGroup({
         runTest({
             expect: {
                 packageName: 'full-package-example',
-                mainPath: 'dist/index.js',
+                mainPath: join(fullPackageExampleDir, 'dist', 'index.js'),
             },
             description: 'reads package json details',
             test: async () => {
