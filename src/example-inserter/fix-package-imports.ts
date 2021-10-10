@@ -20,12 +20,6 @@ export async function fixPackageImports(
             codePath,
             forceIndexPath || packageIndex.indexPath,
         );
-        console.log({
-            relativeIndexImportPath,
-            codePath,
-            forceIndexPath,
-            guessedIndexPath: packageIndex.indexPath,
-        });
 
         newCode = newCode.replace(
             new RegExp(`(['"\`])${relativeIndexImportPath.replace(/\.\w+$/, '')}(['"\`])`, 'g'),

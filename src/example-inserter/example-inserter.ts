@@ -35,7 +35,6 @@ export async function insertAllExamples(
                 packageDir,
                 forceIndexPath,
             );
-            // @ts-expect-error
             // insert fixed code into markdown code with language name
         }, Promise.resolve());
 

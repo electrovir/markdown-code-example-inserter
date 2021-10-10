@@ -8,10 +8,10 @@ testGroup({
     description: extractExamplePath.name,
     tests: (runTest) => {
         runTest({
-            expect: noSourceCodeFiles.withComment,
+            expect: noSourceCodeFiles.comment,
             description: 'correctly checks links relative to the given markdown file',
             test: async () => {
-                const paths = extractExamplePath(noSourceCodeFiles.withLinkPaths, {
+                const paths = extractExamplePath(noSourceCodeFiles.linkPaths, {
                     linkPath: 'comment.md',
                 } as CodeExampleLink);
 
@@ -20,10 +20,10 @@ testGroup({
         });
 
         runTest({
-            expect: noSourceCodeFiles.withInvalidLinkComments,
+            expect: noSourceCodeFiles.invalidLinkComments,
             description: 'correctly checks links relative to the given markdown file 2',
             test: async () => {
-                const paths = extractExamplePath(noSourceCodeFiles.withLinkPaths, {
+                const paths = extractExamplePath(noSourceCodeFiles.linkPaths, {
                     linkPath: 'invalid-link-comments.md',
                 } as CodeExampleLink);
 
@@ -37,7 +37,7 @@ testGroup({
             },
             description: 'errors when files are missing',
             test: async () => {
-                const paths = extractExamplePath(noSourceCodeFiles.withLinkPaths, {
+                const paths = extractExamplePath(noSourceCodeFiles.linkPaths, {
                     linkPath: 'this-does-not-exist',
                 } as CodeExampleLink);
 
