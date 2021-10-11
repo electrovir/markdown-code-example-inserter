@@ -1,6 +1,6 @@
 {
     "name": "markdown-code-example-inserter",
-    "version": "0.0.0",
+    "version": "0.0.1",
     "description": "Syncs code examples with markdown documentation.",
     "homepage": "https://github.com/electrovir/markdown-code-example-inserter",
     "bugs": {
@@ -16,7 +16,9 @@
     },
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
-    "bin": "dist/cli.js",
+    "bin": {
+        "md-code": "dist/cli.js"
+    },
     "scripts": {
         "format": "virmator format write",
         "prepublishOnly": "npm run test:full",
