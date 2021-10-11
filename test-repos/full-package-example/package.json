@@ -1,4 +1,7 @@
 {
     "name": "full-package-example",
-    "main": "dist/index.js"
+    "main": "dist/index.js",
+    "dependencies": {
+        "augment-vir": "^1.0.0"
+    }
 }

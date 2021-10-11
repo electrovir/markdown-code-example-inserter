@@ -1,4 +1,4 @@
-import {readFile} from 'fs-extra';
+import {readFile, writeFile} from 'fs-extra';
 import {join} from 'path';
 import {extractLinks} from '../parsing-markdown/extract-links';
 import {extractExampleCode} from './extract-example';
@@ -41,4 +41,13 @@ export async function insertAllExamples(
         }, Promise.resolve());
 
     return markdownContents;
+}
+
+export async function writeAllExamples(
+    markdownPath: string,
+    packageDir: string,
+    forceIndexPath: string | undefined,
+) {
+    const newText = await insertAllExamples(markdownPath, packageDir, forceIndexPath);
+    await writeFile(markdownPath, newText);
 }
