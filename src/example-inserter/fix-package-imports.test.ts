@@ -33,7 +33,7 @@ testGroup({
 
         runTest({
             expect: `import blah from 'derp';`,
-            description: 'fix index file imports',
+            description: 'fix index file imports with file name',
             test: async () => {
                 const newCode = fixPackageImports(
                     `import blah from '../index';`,
@@ -58,7 +58,7 @@ testGroup({
 
         runTest({
             expect: `import blah from 'derp';`,
-            description: 'fix index file imports',
+            description: 'fix index file imports no trailing slash',
             test: async () => {
                 const newCode = fixPackageImports(
                     `import blah from '..';`,

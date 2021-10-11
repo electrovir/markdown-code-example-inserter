@@ -1,3 +1,4 @@
+import {toPosixPath} from 'augment-vir';
 import {basename, dirname, relative} from 'path';
 import {ParsedCommandLine} from 'typescript';
 import {guessPackageIndex} from '../package-parsing/package-index';
@@ -16,9 +17,8 @@ export async function fixPackageImports(
     const packageIndex = await guessPackageIndex(packageDir, overrideTsConfig, overridePackageJson);
     // fix imports
     if (packageIndex.replaceName) {
-        const relativeIndexImportPath = relative(
-            dirname(codePath),
-            forceIndexPath || packageIndex.indexPath,
+        const relativeIndexImportPath = toPosixPath(
+            relative(dirname(codePath), forceIndexPath || packageIndex.indexPath),
         );
 
         newCode = newCode.replace(

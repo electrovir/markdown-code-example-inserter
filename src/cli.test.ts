@@ -1,4 +1,5 @@
 import {readFile, writeFile} from 'fs-extra';
+import {join} from 'path';
 import {testGroup} from 'test-vir';
 import {cli, parseArgs} from './cli';
 import {MarkdownCodeExampleInserterError} from './errors/markdown-code-example-inserter.error';
@@ -19,12 +20,12 @@ testGroup({
         runTest({
             expect: [
                 'README.md',
-                'test-repos/full-package-example/README.expect.md',
-                'test-repos/full-package-example/README.md',
-                'test-repos/no-source-code/comment.md',
-                'test-repos/no-source-code/invalid-link-comments.md',
-                'test-repos/no-source-code/link-paths.md',
-                'test-repos/no-source-code/link-with-code.md',
+                join('test-repos', 'full-package-example', 'README.expect.md'),
+                join('test-repos', 'full-package-example', 'README.md'),
+                join('test-repos', 'no-source-code', 'comment.md'),
+                join('test-repos', 'no-source-code', 'invalid-link-comments.md'),
+                join('test-repos', 'no-source-code', 'link-paths.md'),
+                join('test-repos', 'no-source-code', 'link-with-code.md'),
             ],
             description: 'gets all .md files and ignore node_modules',
             test: async () => {
