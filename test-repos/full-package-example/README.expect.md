@@ -11,7 +11,7 @@ Example:
 <!-- example-link: src/readme-examples/index-filename-import.example.ts -->
 
 ```TypeScript
-import {doThing} from '../index';
+import {doThing} from 'full-package-example';
 
 console.info(doThing());
 
@@ -24,7 +24,7 @@ Sub category example:
 <!-- example-link: src/readme-examples/no-index-filename-import.example.ts -->
 
 ```TypeScript
-import {doThing} from '../';
+import {doThing} from 'full-package-example';
 
 console.info(doThing());
 
@@ -37,7 +37,7 @@ Sub category 2 example:
 <!-- example-link: src/readme-examples/no-trailing-slash-import.example.ts -->
 
 ```TypeScript
-import {doThing} from '..';
+import {doThing} from 'full-package-example';
 
 console.info(doThing());
 

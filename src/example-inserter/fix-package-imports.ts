@@ -17,7 +17,7 @@ export async function fixPackageImports(
     // fix imports
     if (packageIndex.replaceName) {
         const relativeIndexImportPath = relative(
-            codePath,
+            dirname(codePath),
             forceIndexPath || packageIndex.indexPath,
         );
 
