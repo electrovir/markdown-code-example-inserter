@@ -1,6 +1,6 @@
 {
     "name": "markdown-code-example-inserter",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "Syncs code examples with markdown documentation.",
     "keywords": [
         "automatic",
