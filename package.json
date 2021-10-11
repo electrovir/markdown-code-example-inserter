@@ -1,7 +1,18 @@
 {
     "name": "markdown-code-example-inserter",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "Syncs code examples with markdown documentation.",
+    "keywords": [
+        "automatic",
+        "code",
+        "examples",
+        "insert",
+        "inserter",
+        "interpolator",
+        "markdown",
+        "readme",
+        "snippet"
+    ],
     "homepage": "https://github.com/electrovir/markdown-code-example-inserter",
     "bugs": {
         "url": "https://github.com/electrovir/markdown-code-example-inserter/issues"
