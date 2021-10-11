@@ -6,14 +6,17 @@ import {writeAllExamples} from './example-inserter/example-inserter';
 
 const forceIndexTrigger = '--index';
 const ignoreTrigger = '--ignore';
+const silentTrigger = '--silent';
 
 type CliInputs = {
     forceIndex: string | undefined;
+    silent: boolean;
     files: string[];
 };
 
 export async function parseArgs(args: string[]): Promise<CliInputs> {
     let forceIndex: string | undefined = undefined;
+    let silent = false;
     const inputFiles: string[] = [];
     const globs: string[] = [];
     const ignoreList: string[] = [];
@@ -33,6 +36,8 @@ export async function parseArgs(args: string[]): Promise<CliInputs> {
         } else if (lastArgWasIgnoreTrigger) {
             ignoreList.push(arg);
             lastArgWasIgnoreTrigger = false;
+        } else if (arg === silentTrigger) {
+            silent = true;
         } else {
             globs.push(arg);
         }
@@ -53,14 +58,24 @@ export async function parseArgs(args: string[]): Promise<CliInputs> {
 
     return {
         forceIndex,
+        silent,
         files: uniqueFiles,
     };
 }
 
 export async function cli(rawArgs: string[], overrideDir?: string) {
     const args = await parseArgs(rawArgs);
+    if (!args.files.length) {
+        throw new MarkdownCodeExampleInserterError('No markdown files given to insert code into.');
+    }
+    if (!args.silent) {
+        console.info(`Inserting code into markdown:`);
+    }
     await Promise.all(
         args.files.map(async (relativeFilePath) => {
+            if (!args.silent) {
+                console.info(`    ${relativeFilePath}`);
+            }
             await writeAllExamples(
                 resolve(relativeFilePath),
                 overrideDir || process.cwd(),

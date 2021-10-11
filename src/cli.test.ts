@@ -1,6 +1,7 @@
 import {readFile, writeFile} from 'fs-extra';
 import {testGroup} from 'test-vir';
 import {cli, parseArgs} from './cli';
+import {MarkdownCodeExampleInserterError} from './errors/markdown-code-example-inserter.error';
 import {fullPackageExampleDir, fullPackageExampleFiles} from './repo-paths';
 
 testGroup({
@@ -50,6 +51,15 @@ testGroup({
                 return paths;
             },
         });
+
+        runTest({
+            expect: ['README.md'],
+            description: 'works with simple glob',
+            test: async () => {
+                const paths = (await parseArgs(['./*.md'])).files;
+                return paths;
+            },
+        });
     },
 });
 
@@ -64,7 +74,7 @@ testGroup({
                     await readFile(fullPackageExampleFiles.readme)
                 ).toString();
                 try {
-                    await cli([fullPackageExampleFiles.readme], fullPackageExampleDir);
+                    await cli([fullPackageExampleFiles.readme, '--silent'], fullPackageExampleDir);
                     const newFileContents = (
                         await readFile(fullPackageExampleFiles.readme)
                     ).toString();
@@ -72,6 +82,16 @@ testGroup({
                 } finally {
                     await writeFile(fullPackageExampleFiles.readme, originalFileContents);
                 }
+            },
+        });
+
+        runTest({
+            expectError: {
+                errorClass: MarkdownCodeExampleInserterError,
+            },
+            description: 'cli works correct on readme file',
+            test: async () => {
+                await cli([], fullPackageExampleDir);
             },
         });
     },
