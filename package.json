@@ -23,6 +23,7 @@
         "test:full": "npm test && npm run spellcheck && virmator format check"
     },
     "dependencies": {
+        "augment-vir": "^1.0.0",
         "fs-extra": "^10.0.0",
         "language-map": "^1.4.0",
         "rehype-parse": "^7.0.1",

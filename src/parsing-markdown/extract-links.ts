@@ -4,7 +4,7 @@ import type {Node} from 'unist';
 import type {RequiredAndNotNullBy} from '../augments/type';
 import {MarkdownCodeExampleInserterError} from '../errors/markdown-code-example-inserter.error';
 import {linkCommentTriggerPhrase, startsWithTriggerPhraseRegExp} from '../trigger-phrase';
-import {isCodeBlock, isCommentNode, parseMarkdownFileContents} from './parse-markdown';
+import {isCodeBlock, isCommentNode, parseMarkdownContents} from './parse-markdown';
 import {walk} from './walk';
 
 export type CodeExampleLink = {
@@ -20,7 +20,7 @@ function isExampleLinkComment(input: Node): input is Comment {
 export function extractLinks(
     markdownFileContents: string | Readonly<Buffer>,
 ): Readonly<CodeExampleLink>[] {
-    const parsedRoot = parseMarkdownFileContents(markdownFileContents);
+    const parsedRoot = parseMarkdownContents(markdownFileContents);
     const comments: Readonly<Comment>[] = [];
     const codeBlocks: Record<number, Readonly<Code>> = {};
 

@@ -4,6 +4,7 @@ import {guessPackageIndex} from '../package-parsing/package-index';
 import {extractLinks} from '../parsing-markdown/extract-links';
 import {extractExampleCode} from './extract-example';
 import {fixPackageImports} from './fix-package-imports';
+import {getFileLanguageName} from './get-file-language-name';
 
 export async function insertAllExamples(
     markdownPath: string,
@@ -24,6 +25,10 @@ export async function insertAllExamples(
                 return lineDifference;
             }
         })
+        /**
+         * Reverse the array so that we're working from the bottom of the file upwards so we don't
+         * mess up line numbers for other comments.
+         */
         .reverse()
         .reduce(async (lastPromise, linkComment) => {
             await lastPromise;
@@ -35,6 +40,7 @@ export async function insertAllExamples(
                 packageDir,
                 forceIndexPath,
             );
+            const language = getFileLanguageName(linkComment.linkPath);
             // insert fixed code into markdown code with language name
         }, Promise.resolve());
 

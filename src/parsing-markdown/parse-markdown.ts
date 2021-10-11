@@ -12,10 +12,10 @@ const htmlParser = unified().use(rehypeParse, {fragment: true});
 
 export async function parseMarkdownFile(markdownFilePath: string): Promise<MarkdownRoot> {
     const fileContents = await readFile(markdownFilePath);
-    return parseMarkdownFileContents(fileContents);
+    return parseMarkdownContents(fileContents);
 }
 
-export function parseMarkdownFileContents(markdownFileContents: string | Buffer): MarkdownRoot {
+export function parseMarkdownContents(markdownFileContents: string | Buffer): MarkdownRoot {
     const parsedContents = markdownParser.parse(markdownFileContents);
     return parsedContents as MarkdownRoot;
 }
