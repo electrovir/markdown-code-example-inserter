@@ -79,7 +79,7 @@ testGroup({
             expect: [
                 'a',
                 'linked comment here',
-                `\`\`\`TypeScript\nconsole.log('derp');\n\`\`\``,
+                `\`\`\`TypeScript\nconsole.info('derp');\n\`\`\``,
                 'c',
                 'd',
                 'e',
@@ -89,7 +89,7 @@ testGroup({
                 const replacedLines = insertCodeExample(
                     ['a', 'linked comment here', 'c', 'd', 'e'],
                     'TypeScript',
-                    "console.log('derp');",
+                    "console.info('derp');",
                     {
                         node: {
                             position: {
@@ -108,7 +108,7 @@ testGroup({
             expect: [
                 'a',
                 'linked comment here',
-                `\`\`\`TypeScript\nconsole.log('derp');\n\`\`\``,
+                `\`\`\`TypeScript\nconsole.info('derp');\n\`\`\``,
                 'e',
             ],
             description: 'replaces code block when its present after the linked comment',
@@ -116,18 +116,18 @@ testGroup({
                 const replacedLines = insertCodeExample(
                     ['a', 'linked comment here', 'code block here', 'code block still here', 'e'],
                     'TypeScript',
-                    "console.log('derp');",
+                    "console.info('derp');",
                     {
                         node: {
                             position: {
-                                start: {line: 2},
-                                end: {line: 3},
+                                start: {line: 1},
+                                end: {line: 1},
                             },
                         },
                         linkedCodeBlock: {
                             position: {
-                                start: {line: 4},
-                                end: {line: 6},
+                                start: {line: 2},
+                                end: {line: 3},
                             },
                         },
                     } as Readonly<CodeExampleLink>,

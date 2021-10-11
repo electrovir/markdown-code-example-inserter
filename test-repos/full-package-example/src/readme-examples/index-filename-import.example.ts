@@ -1,3 +1,3 @@
 import {doThing} from '../index';
 
-console.log(doThing());
+console.info(doThing());

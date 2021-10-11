@@ -18,14 +18,12 @@ export function walk(
     callback: (node: Node, language: WalkLanguages) => unknown,
 ): boolean {
     if (isHtmlNode(node)) {
+        callback(node, 'markdown');
         const parsedHtmlNode = parseHtmlNode(node);
-        if (parsedHtmlNode.type === 'root' && 'children' in parsedHtmlNode) {
-            // skip useless html root node
+        if (parsedHtmlNode.children) {
             return parsedHtmlNode.children.some((htmlChild) => {
                 return walk(htmlChild, 'html', callback);
             });
-        } else {
-            return walk(parsedHtmlNode, 'html', callback);
         }
     }
 

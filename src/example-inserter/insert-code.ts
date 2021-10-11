@@ -4,20 +4,22 @@ import {LanguageName} from './get-file-language-name';
 const markdownCodeBlockWrapper = '```';
 
 export function insertCodeExample(
-    markdownCode: string,
-    language: LanguageName,
+    lines: Readonly<string[]>,
+    language: LanguageName | undefined,
     fixedCode: string,
     linkComment: Readonly<CodeExampleLink>,
-): string {
-    const markdownCodeBlock = `${markdownCodeBlockWrapper}${language}\n${fixedCode}\n${markdownCodeBlockWrapper}`;
+): Readonly<string[]> {
+    const markdownCodeBlock = `${markdownCodeBlockWrapper}${
+        language ?? ''
+    }\n${fixedCode}\n${markdownCodeBlockWrapper}`;
 
     if (linkComment.linkedCodeBlock) {
         return replaceLines(
             lines,
             [
                 // line is 1 indexed
-                linkComment.linkedCodeBlock.position.start.line - 1,
-                linkComment.linkedCodeBlock.position.end.line - 1,
+                linkComment.linkedCodeBlock.position.start.line,
+                linkComment.linkedCodeBlock.position.end.line,
             ],
             markdownCodeBlock,
         );
@@ -31,16 +33,16 @@ export function insertCodeExample(
     }
 }
 
-export function insertText(
-    lines: string,
+export function insertLine(
+    lines: Readonly<string[]>,
     insertAtThisIndex: number,
     insertion: string,
-): Readonly<string> {
+): Readonly<string[]> {
     return [...lines.slice(0, insertAtThisIndex), insertion, ...lines.slice(insertAtThisIndex)];
 }
 
-export function replaceText(
-    lines: Readonly<string>,
+export function replaceLines(
+    lines: Readonly<string[]>,
     range: Readonly<[number, number]>,
     insert: string,
 ): Readonly<string[]> {

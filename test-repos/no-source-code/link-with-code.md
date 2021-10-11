@@ -7,7 +7,7 @@
 <!--  example-link: comment is here -->
 
 ```typescript
-console.log('hello there');
+console.info('hello there');
 ```
 
 #### Heading 4

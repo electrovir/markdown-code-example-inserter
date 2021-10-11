@@ -12,10 +12,14 @@ export const noSourceCodeFiles = {
     comment: join(noSourceCodeDir, 'comment.md'),
     invalidLinkComments: join(noSourceCodeDir, 'invalid-link-comments.md'),
     linkPaths: join(noSourceCodeDir, 'link-paths.md'),
-    commentWithCode: join(noSourceCodeDir, 'link-with-code.md'),
+    linkWithCode: join(noSourceCodeDir, 'link-with-code.md'),
 };
 
 export const fullPackageExampleDir = join(testReposDir, 'full-package-example');
+export const fullPackageExampleFiles = {
+    readmeNoCodeBlocks: join(fullPackageExampleDir, 'README-no-code-blocks.md'),
+    readmeNoCodeBlocksExpectation: join(fullPackageExampleDir, 'README-no-code-blocks.expect.md'),
+};
 
 export const extendingTsConfigDir = join(testReposDir, 'extending-ts-config');
 export const extendingTsConfigFiles = {

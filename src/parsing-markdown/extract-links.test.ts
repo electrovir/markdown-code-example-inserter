@@ -1,5 +1,6 @@
 import {readFile} from 'fs-extra';
 import {testGroup} from 'test-vir';
+import {MarkdownCodeExampleInserterError} from '../errors/markdown-code-example-inserter.error';
 import {noSourceCodeFiles} from '../repo-paths';
 import {linkCommentTriggerPhrase} from '../trigger-phrase';
 import {extractLinks} from './extract-links';
@@ -37,32 +38,66 @@ testGroup({
         });
 
         runTest({
-            expect: {
-                type: 'code',
-                lang: 'typescript',
-                meta: null,
-                value: "console.log('hello there');",
-                position: {
-                    start: {
-                        line: 9,
-                        column: 1,
-                        offset: 83,
-                    },
-                    end: {
-                        line: 11,
-                        column: 4,
-                        offset: 128,
+            expect: [
+                {
+                    type: 'comment',
+                    value: '  example-link: comment is here ',
+                    position: {
+                        start: {
+                            line: 7,
+                            column: 1,
+                            offset: 42,
+                        },
+                        end: {
+                            line: 7,
+                            column: 40,
+                            offset: 81,
+                        },
                     },
                 },
-            },
+                {
+                    type: 'code',
+                    lang: 'typescript',
+                    meta: null,
+                    value: "console.info('hello there');",
+                    position: {
+                        start: {
+                            line: 9,
+                            column: 1,
+                            offset: 83,
+                        },
+                        end: {
+                            line: 11,
+                            column: 4,
+                            offset: 129,
+                        },
+                    },
+                },
+            ],
             description: 'includes code block',
             test: async () => {
-                const links = extractLinks(await readFile(noSourceCodeFiles.commentWithCode));
+                const links = extractLinks(await readFile(noSourceCodeFiles.linkWithCode));
                 const firstLink = links[0];
                 if (links.length !== 1 || !firstLink) {
-                    throw new Error(`Wrong links extracted`);
+                    throw new MarkdownCodeExampleInserterError(`Wrong links extracted`);
                 }
-                return firstLink.linkedCodeBlock;
+                return [firstLink.node, firstLink.linkedCodeBlock];
+            },
+        });
+
+        runTest({
+            expect: 2,
+            description: 'extracted line number is 1 indexed',
+            test: async () => {
+                const links = extractLinks(
+                    '1 2 3                       a b c\n<!-- example-link: thing/derp.ts -->',
+                );
+                const firstLink = links[0];
+                if (links.length !== 1 || !firstLink) {
+                    throw new MarkdownCodeExampleInserterError(`Wrong links extracted`);
+                }
+
+                return firstLink.node.position.end.line;
             },
         });
     },

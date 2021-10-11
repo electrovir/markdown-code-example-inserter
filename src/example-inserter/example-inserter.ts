@@ -1,30 +1,25 @@
 import {readFile} from 'fs-extra';
 import {join} from 'path';
-import {guessPackageIndex} from '../package-parsing/package-index';
 import {extractLinks} from '../parsing-markdown/extract-links';
 import {extractExampleCode} from './extract-example';
 import {fixPackageImports} from './fix-package-imports';
 import {getFileLanguageName} from './get-file-language-name';
+import {insertCodeExample} from './insert-code';
 
 export async function insertAllExamples(
     markdownPath: string,
     packageDir: string,
     forceIndexPath: string | undefined,
 ): Promise<string> {
-    const markdownFileContents = (await readFile(markdownPath)).toString();
-    const markdownLines = markdownFileContents.split('\n');
+    const markdownContents = (await readFile(markdownPath)).toString();
+    let markdownLines: Readonly<string[]> = markdownContents.split('\n');
 
-    const linkComments = extractLinks(markdownFileContents);
-    linkComments
-        .sort((a, b) => {
-            const lineDifference = a.node.position.end.line - b.node.position.end.line;
+    const linkComments = extractLinks(markdownContents);
 
-            if (lineDifference === 0) {
-                return a.node.position.end.column - b.node.position.end.column;
-            } else {
-                return lineDifference;
-            }
-        })
+    console.log(JSON.stringify(linkComments, null, 4));
+
+    await linkComments
+        .sort((a, b) => a.node.position.end.offset - b.node.position.end.offset)
         /**
          * Reverse the array so that we're working from the bottom of the file upwards so we don't
          * mess up line numbers for other comments.
@@ -33,7 +28,6 @@ export async function insertAllExamples(
         .reduce(async (lastPromise, linkComment) => {
             await lastPromise;
             const originalCode = (await extractExampleCode(markdownPath, linkComment)).toString();
-            const packageIndex = await guessPackageIndex(packageDir);
             const fixedCode = await fixPackageImports(
                 originalCode,
                 join(packageDir, linkComment.linkPath),
@@ -41,8 +35,9 @@ export async function insertAllExamples(
                 forceIndexPath,
             );
             const language = getFileLanguageName(linkComment.linkPath);
+            markdownLines = insertCodeExample(markdownLines, language, fixedCode, linkComment);
             // insert fixed code into markdown code with language name
         }, Promise.resolve());
 
-    return markdownFileContents;
+    return markdownLines.join('\n');
 }

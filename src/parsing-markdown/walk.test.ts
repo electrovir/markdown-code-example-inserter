@@ -2,7 +2,7 @@ import {testGroup} from 'test-vir';
 import type {Literal, Node, Parent, Position} from 'unist';
 import {noSourceCodeFiles} from '../repo-paths';
 import {parseHtmlContents, parseMarkdownContents, parseMarkdownFile} from './parse-markdown';
-import {walk} from './walk';
+import {walk, WalkLanguages} from './walk';
 
 testGroup({
     description: walk.name,
@@ -21,6 +21,7 @@ testGroup({
                 'text:markdown',
                 'heading:markdown',
                 'text:markdown',
+                'html:markdown',
                 'comment:html',
                 'heading:markdown',
                 'text:markdown',
@@ -46,6 +47,7 @@ testGroup({
                 'text:markdown',
                 'heading:markdown',
                 'text:markdown',
+                'html:markdown',
                 'comment:html',
                 'code:markdown',
                 'heading:markdown',
@@ -55,7 +57,7 @@ testGroup({
                 const nodeTypes: string[] = [];
 
                 walk(
-                    await getRootNode(noSourceCodeFiles.commentWithCode),
+                    await getRootNode(noSourceCodeFiles.linkWithCode),
                     'markdown',
                     (node, language) => {
                         nodeTypes.push(`${node.type}:${language}`);
@@ -63,6 +65,153 @@ testGroup({
                 );
 
                 return nodeTypes;
+            },
+        });
+        runTest({
+            description: 'markdown with comment positions',
+            expect: [
+                {
+                    type: 'root',
+                    value: undefined,
+                    language: 'markdown',
+                    position: {
+                        start: {
+                            line: 1,
+                            column: 1,
+                            offset: 0,
+                        },
+                        end: {
+                            line: 5,
+                            column: 15,
+                            offset: 49,
+                        },
+                    },
+                },
+                {
+                    type: 'heading',
+                    value: undefined,
+                    language: 'markdown',
+                    position: {
+                        start: {
+                            line: 1,
+                            column: 1,
+                            offset: 0,
+                        },
+                        end: {
+                            line: 1,
+                            column: 9,
+                            offset: 8,
+                        },
+                    },
+                },
+                {
+                    type: 'text',
+                    value: 'stuff',
+                    language: 'markdown',
+                    position: {
+                        start: {
+                            line: 1,
+                            column: 4,
+                            offset: 3,
+                        },
+                        end: {
+                            line: 1,
+                            column: 9,
+                            offset: 8,
+                        },
+                    },
+                },
+                {
+                    type: 'html',
+                    value: '<!-- \n comment here \n -->',
+                    language: 'markdown',
+                    position: {
+                        start: {
+                            line: 2,
+                            column: 1,
+                            offset: 9,
+                        },
+                        end: {
+                            line: 4,
+                            column: 5,
+                            offset: 34,
+                        },
+                    },
+                },
+                {
+                    type: 'comment',
+                    value: ' \n comment here \n ',
+                    language: 'html',
+                    position: {
+                        start: {
+                            line: 1,
+                            column: 1,
+                            offset: 0,
+                        },
+                        end: {
+                            line: 3,
+                            column: 5,
+                            offset: 25,
+                        },
+                    },
+                },
+                {
+                    type: 'heading',
+                    value: undefined,
+                    language: 'markdown',
+                    position: {
+                        start: {
+                            line: 5,
+                            column: 1,
+                            offset: 35,
+                        },
+                        end: {
+                            line: 5,
+                            column: 15,
+                            offset: 49,
+                        },
+                    },
+                },
+                {
+                    type: 'text',
+                    value: 'more stuff',
+                    language: 'markdown',
+                    position: {
+                        start: {
+                            line: 5,
+                            column: 5,
+                            offset: 39,
+                        },
+                        end: {
+                            line: 5,
+                            column: 15,
+                            offset: 49,
+                        },
+                    },
+                },
+            ],
+            test: async () => {
+                const positions: {
+                    type: string;
+                    value: unknown;
+                    language: WalkLanguages;
+                    position: Position | undefined;
+                }[] = [];
+
+                walk(
+                    parseMarkdownContents(`## stuff\n<!-- \n comment here \n -->\n### more stuff`),
+                    'markdown',
+                    (node, language) => {
+                        positions.push({
+                            type: node.type,
+                            value: (node as Literal).value,
+                            language,
+                            position: node.position,
+                        });
+                    },
+                );
+
+                return positions;
             },
         });
 
