@@ -1,35 +1,35 @@
 import {testGroup} from 'test-vir';
 import {CodeExampleLink} from '../parsing-markdown/extract-links';
-import {insertCodeExample, insertLine, replaceLines} from './insert-code';
+import {insertCodeExample, insertText, replaceTextRange} from './insert-code';
 
 testGroup({
-    description: replaceLines.name,
+    description: replaceTextRange.name,
     tests: (runTest) => {
         runTest({
-            expect: ['a', 'b', 'insertion', 'e'],
-            description: 'replaces multiple lines with the given string',
+            expect: 'a b insertion e',
+            description: 'replaces range within the given string',
             test: () => {
-                const replacedLines = replaceLines(['a', 'b', 'c', 'd', 'e'], [2, 3], 'insertion');
+                const replacedLines = replaceTextRange('a b c d e', [4, 7], 'insertion');
 
                 return replacedLines;
             },
         });
 
         runTest({
-            expect: ['insertion', 'd', 'e'],
-            description: 'replaces at the beginning of the array',
+            expect: 'insertion d e',
+            description: 'replaces at the beginning of the string',
             test: () => {
-                const replacedLines = replaceLines(['a', 'b', 'c', 'd', 'e'], [0, 2], 'insertion');
+                const replacedLines = replaceTextRange('a b c d e', [0, 5], 'insertion');
 
                 return replacedLines;
             },
         });
 
         runTest({
-            expect: ['a', 'b', 'c', 'd', 'insertion'],
-            description: 'replaces at the end of the array',
+            expect: 'a b c d insertion',
+            description: 'replaces at the end of the string',
             test: () => {
-                const replacedLines = replaceLines(['a', 'b', 'c', 'd', 'e'], [4, 4], 'insertion');
+                const replacedLines = replaceTextRange('a b c d e', [8, 9], 'insertion');
 
                 return replacedLines;
             },
@@ -38,33 +38,33 @@ testGroup({
 });
 
 testGroup({
-    description: insertLine.name,
+    description: insertText.name,
     tests: (runTest) => {
         runTest({
-            expect: ['a', 'b', 'c', 'd', 'insertion', 'e'],
-            description: 'inserts into the middle of an array',
+            expect: 'a b c d insertion e',
+            description: 'inserts into the middle of a string',
             test: () => {
-                const replacedLines = insertLine(['a', 'b', 'c', 'd', 'e'], 4, 'insertion');
+                const replacedLines = insertText('a b c d e', 8, 'insertion ');
 
                 return replacedLines;
             },
         });
 
         runTest({
-            expect: ['a', 'insertion', 'b', 'c', 'd', 'e'],
-            description: 'inserts after the beginning of an array',
+            expect: 'insertion a b c d e',
+            description: 'inserts after the beginning of a string',
             test: () => {
-                const replacedLines = insertLine(['a', 'b', 'c', 'd', 'e'], 1, 'insertion');
+                const replacedLines = insertText('a b c d e', 0, 'insertion ');
 
                 return replacedLines;
             },
         });
 
         runTest({
-            expect: ['a', 'b', 'c', 'd', 'e', 'insertion'],
-            description: 'inserts at the end of an array',
+            expect: 'a b c d e insertion',
+            description: 'inserts at the end of a string',
             test: () => {
-                const replacedLines = insertLine(['a', 'b', 'c', 'd', 'e'], 5, 'insertion');
+                const replacedLines = insertText('a b c d e', 9, ' insertion');
 
                 return replacedLines;
             },
@@ -76,25 +76,18 @@ testGroup({
     description: insertCodeExample.name,
     tests: (runTest) => {
         runTest({
-            expect: [
-                'a',
-                'linked comment here',
-                `\`\`\`TypeScript\nconsole.info('derp');\n\`\`\``,
-                'c',
-                'd',
-                'e',
-            ],
+            expect: "a\n\nlinked comment here\n\n```TypeScript\nconsole.info('derp');\n```\n\nc\n\nd\n\ne",
             description: 'inserts code without a linked code block',
             test: () => {
                 const replacedLines = insertCodeExample(
-                    ['a', 'linked comment here', 'c', 'd', 'e'],
+                    'a\n\nlinked comment here\n\nc\n\nd\n\ne',
                     'TypeScript',
                     "console.info('derp');",
                     {
                         node: {
                             position: {
-                                start: {line: 2},
-                                end: {line: 3},
+                                start: {offset: 3},
+                                end: {offset: 3 + 'linked comment here'.length},
                             },
                         },
                     } as Readonly<CodeExampleLink>,
@@ -105,29 +98,24 @@ testGroup({
         });
 
         runTest({
-            expect: [
-                'a',
-                'linked comment here',
-                `\`\`\`TypeScript\nconsole.info('derp');\n\`\`\``,
-                'e',
-            ],
+            expect: "a\n\nlinked comment here\n\n```TypeScript\nconsole.info('derp');\n```\n\nb\n\nc",
             description: 'replaces code block when its present after the linked comment',
             test: () => {
                 const replacedLines = insertCodeExample(
-                    ['a', 'linked comment here', 'code block here', 'code block still here', 'e'],
+                    'a\n\nlinked comment here\n\ncode block here\n\ncode block still here\n\nb\n\nc',
                     'TypeScript',
                     "console.info('derp');",
                     {
                         node: {
                             position: {
-                                start: {line: 1},
-                                end: {line: 1},
+                                start: {offset: 3},
+                                end: {offset: 22},
                             },
                         },
                         linkedCodeBlock: {
                             position: {
-                                start: {line: 2},
-                                end: {line: 3},
+                                start: {offset: 24},
+                                end: {offset: 62},
                             },
                         },
                     } as Readonly<CodeExampleLink>,

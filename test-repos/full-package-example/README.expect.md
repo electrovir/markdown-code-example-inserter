@@ -10,17 +10,38 @@ Example:
 
 <!-- example-link: src/readme-examples/index-filename-import.example.ts -->
 
+```TypeScript
+import {doThing} from '../index';
+
+console.info(doThing());
+
+```
+
 ## Usage sub category
 
 Sub category example:
 
 <!-- example-link: src/readme-examples/no-index-filename-import.example.ts -->
 
+```TypeScript
+import {doThing} from '../';
+
+console.info(doThing());
+
+```
+
 ## Usage sub category 2
 
 Sub category 2 example:
 
 <!-- example-link: src/readme-examples/no-trailing-slash-import.example.ts -->
+
+```TypeScript
+import {doThing} from '..';
+
+console.info(doThing());
+
+```
 
 # Dev
 

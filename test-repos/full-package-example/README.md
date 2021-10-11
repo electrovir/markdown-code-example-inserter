@@ -22,6 +22,10 @@ Sub category 2 example:
 
 <!-- example-link: src/readme-examples/no-trailing-slash-import.example.ts -->
 
+```python
+print('do the thing')
+```
+
 # Dev
 
 How to do dev and testing and stuff.

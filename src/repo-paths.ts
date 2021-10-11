@@ -17,8 +17,8 @@ export const noSourceCodeFiles = {
 
 export const fullPackageExampleDir = join(testReposDir, 'full-package-example');
 export const fullPackageExampleFiles = {
-    readmeNoCodeBlocks: join(fullPackageExampleDir, 'README-no-code-blocks.md'),
-    readmeNoCodeBlocksExpectation: join(fullPackageExampleDir, 'README-no-code-blocks.expect.md'),
+    readmeNoCodeBlocks: join(fullPackageExampleDir, 'README.md'),
+    readmeNoCodeBlocksExpectation: join(fullPackageExampleDir, 'README.expect.md'),
 };
 
 export const extendingTsConfigDir = join(testReposDir, 'extending-ts-config');

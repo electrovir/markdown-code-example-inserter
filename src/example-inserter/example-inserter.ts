@@ -11,12 +11,9 @@ export async function insertAllExamples(
     packageDir: string,
     forceIndexPath: string | undefined,
 ): Promise<string> {
-    const markdownContents = (await readFile(markdownPath)).toString();
-    let markdownLines: Readonly<string[]> = markdownContents.split('\n');
+    let markdownContents = (await readFile(markdownPath)).toString();
 
     const linkComments = extractLinks(markdownContents);
-
-    console.log(JSON.stringify(linkComments, null, 4));
 
     await linkComments
         .sort((a, b) => a.node.position.end.offset - b.node.position.end.offset)
@@ -35,9 +32,13 @@ export async function insertAllExamples(
                 forceIndexPath,
             );
             const language = getFileLanguageName(linkComment.linkPath);
-            markdownLines = insertCodeExample(markdownLines, language, fixedCode, linkComment);
-            // insert fixed code into markdown code with language name
+            markdownContents = insertCodeExample(
+                markdownContents,
+                language,
+                fixedCode,
+                linkComment,
+            );
         }, Promise.resolve());
 
-    return markdownLines.join('\n');
+    return markdownContents;
 }
