@@ -2,15 +2,18 @@
 import {promise as glob} from 'glob-promise';
 import {relative, resolve} from 'path';
 import {MarkdownCodeExampleInserterError} from './errors/markdown-code-example-inserter.error';
-import {writeAllExamples} from './example-inserter/example-inserter';
+import {OutOfDateInsertedCodeError} from './errors/out-of-date-inserted-code.error';
+import {isCodeUpdated, writeAllExamples} from './example-inserter/example-inserter';
 
 const forceIndexTrigger = '--index';
 const ignoreTrigger = '--ignore';
 const silentTrigger = '--silent';
+const checkOnlyTrigger = '--check';
 
 type CliInputs = {
     forceIndex: string | undefined;
     silent: boolean;
+    checkOnly: boolean;
     files: string[];
 };
 
@@ -20,6 +23,7 @@ export async function parseArgs(args: string[]): Promise<CliInputs> {
     const inputFiles: string[] = [];
     const globs: string[] = [];
     const ignoreList: string[] = [];
+    let checkOnly = false;
     let lastArgWasForceIndexTrigger = false;
     let lastArgWasIgnoreTrigger = false;
 
@@ -33,6 +37,12 @@ export async function parseArgs(args: string[]): Promise<CliInputs> {
             lastArgWasForceIndexTrigger = false;
         } else if (arg === ignoreTrigger) {
             lastArgWasIgnoreTrigger = true;
+        } else if (arg === checkOnlyTrigger) {
+            checkOnly = true;
+        } else if (arg === checkOnlyTrigger && checkOnly) {
+            throw new MarkdownCodeExampleInserterError(
+                `${checkOnlyTrigger} accidentally duplicated in your inputs`,
+            );
         } else if (lastArgWasIgnoreTrigger) {
             ignoreList.push(arg);
             lastArgWasIgnoreTrigger = false;
@@ -59,6 +69,7 @@ export async function parseArgs(args: string[]): Promise<CliInputs> {
     return {
         forceIndex,
         silent,
+        checkOnly,
         files: uniqueFiles,
     };
 }
@@ -69,22 +80,69 @@ export async function cli(rawArgs: string[], overrideDir?: string) {
         throw new MarkdownCodeExampleInserterError('No markdown files given to insert code into.');
     }
     if (!args.silent) {
-        console.info(`Inserting code into markdown:`);
+        if (args.checkOnly) {
+            console.info(`Checking that code in markdown is up to date:`);
+        } else {
+            console.info(`Inserting code into markdown:`);
+        }
     }
+    const errors: MarkdownCodeExampleInserterError[] = [];
     await Promise.all(
         args.files.map(async (relativeFilePath) => {
-            if (!args.silent) {
-                console.info(`    ${relativeFilePath}`);
+            try {
+                if (args.checkOnly) {
+                    const upToDate = await isCodeUpdated(
+                        resolve(relativeFilePath),
+                        overrideDir || process.cwd(),
+                        args.forceIndex,
+                    );
+                    if (upToDate) {
+                        if (!args.silent) {
+                            console.info(`    ${relativeFilePath}: up to date`);
+                        }
+                    } else {
+                        if (!args.silent) {
+                            console.error(`    ${relativeFilePath}: NOT up to date`);
+                        }
+                        errors.push(
+                            new OutOfDateInsertedCodeError(
+                                `${relativeFilePath} is not update to date.`,
+                            ),
+                        );
+                    }
+                } else {
+                    if (!args.silent) {
+                        console.info(`    ${relativeFilePath}`);
+                    }
+                    await writeAllExamples(
+                        resolve(relativeFilePath),
+                        overrideDir || process.cwd(),
+                        args.forceIndex,
+                    );
+                }
+            } catch (error) {
+                const errorWrapper = new MarkdownCodeExampleInserterError(
+                    `Errored on ${relativeFilePath}: ${String(error)}`,
+                );
+                console.error(errorWrapper);
+                errors.push(errorWrapper);
             }
-            await writeAllExamples(
-                resolve(relativeFilePath),
-                overrideDir || process.cwd(),
-                args.forceIndex,
-            );
         }),
     );
+    if (errors.length) {
+        if (errors.every((error) => error instanceof OutOfDateInsertedCodeError)) {
+            throw new OutOfDateInsertedCodeError(
+                'Code in Markdown file(s) is out of date. Run without --check to update.',
+            );
+        } else {
+            throw new MarkdownCodeExampleInserterError(`Code insertion into Markdown failed.`);
+        }
+    }
 }
 
 if (require.main === module) {
-    cli(process.argv.slice(2));
+    cli(process.argv.slice(2)).catch((error: unknown) => {
+        console.error(error);
+        process.exit(1);
+    });
 }

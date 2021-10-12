@@ -1,7 +1,7 @@
 import {readFile} from 'fs-extra';
 import {testGroup} from 'test-vir';
 import {fullPackageExampleDir, fullPackageExampleFiles} from '../repo-paths';
-import {insertAllExamples} from './example-inserter';
+import {insertAllExamples, isCodeUpdated} from './example-inserter';
 
 testGroup({
     description: insertAllExamples.name,
@@ -17,6 +17,39 @@ testGroup({
                 );
 
                 return codeInsertedMarkdown;
+            },
+        });
+    },
+});
+
+testGroup({
+    description: isCodeUpdated.name,
+    tests: async (runTest) => {
+        runTest({
+            expect: false,
+            description: 'correctly reads out of date markdown as outdated',
+            test: async () => {
+                const updated = await isCodeUpdated(
+                    fullPackageExampleFiles.readme,
+                    fullPackageExampleDir,
+                    undefined,
+                );
+
+                return updated;
+            },
+        });
+
+        runTest({
+            expect: true,
+            description: 'correctly reads updated markdown as updated',
+            test: async () => {
+                const updated = await isCodeUpdated(
+                    fullPackageExampleFiles.readmeExpectation,
+                    fullPackageExampleDir,
+                    undefined,
+                );
+
+                return updated;
             },
         });
     },

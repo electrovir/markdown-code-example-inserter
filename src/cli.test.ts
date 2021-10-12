@@ -3,6 +3,7 @@ import {join} from 'path';
 import {testGroup} from 'test-vir';
 import {cli, parseArgs} from './cli';
 import {MarkdownCodeExampleInserterError} from './errors/markdown-code-example-inserter.error';
+import {OutOfDateInsertedCodeError} from './errors/out-of-date-inserted-code.error';
 import {fullPackageExampleDir, fullPackageExampleFiles} from './repo-paths';
 
 testGroup({
@@ -69,7 +70,7 @@ testGroup({
     tests: async (runTest) => {
         runTest({
             expect: (await readFile(fullPackageExampleFiles.readmeExpectation)).toString(),
-            description: 'cli works correct on readme file',
+            description: 'cli works correctly on readme file',
             test: async () => {
                 const originalFileContents = (
                     await readFile(fullPackageExampleFiles.readme)
@@ -87,10 +88,63 @@ testGroup({
         });
 
         runTest({
+            expect: (await readFile(fullPackageExampleFiles.readmeExpectation)).toString(),
+            description: "cli --check doesn't update the markdown files",
+            test: async () => {
+                const originalFileContents = (
+                    await readFile(fullPackageExampleFiles.readmeExpectation)
+                ).toString();
+                try {
+                    await cli(
+                        [fullPackageExampleFiles.readmeExpectation, '--silent', '--check'],
+                        fullPackageExampleDir,
+                    );
+                    const newFileContents = (
+                        await readFile(fullPackageExampleFiles.readmeExpectation)
+                    ).toString();
+                    return newFileContents;
+                } finally {
+                    if (
+                        (await readFile(fullPackageExampleFiles.readmeExpectation)).toString() !==
+                        originalFileContents
+                    ) {
+                        await writeFile(
+                            fullPackageExampleFiles.readmeExpectation,
+                            originalFileContents,
+                        );
+                    }
+                }
+            },
+        });
+
+        runTest({
+            expectError: {
+                errorClass: OutOfDateInsertedCodeError,
+            },
+            description: 'cli --check errors when not update to date',
+            test: async () => {
+                await cli(
+                    [fullPackageExampleFiles.readme, '--silent', '--check'],
+                    fullPackageExampleDir,
+                );
+            },
+        });
+
+        runTest({
+            description: 'cli --check does not error when code is up to date',
+            test: async () => {
+                await cli(
+                    [fullPackageExampleFiles.readmeExpectation, '--silent', '--check'],
+                    fullPackageExampleDir,
+                );
+            },
+        });
+
+        runTest({
             expectError: {
                 errorClass: MarkdownCodeExampleInserterError,
             },
-            description: 'cli works correct on readme file',
+            description: 'cli errors when no arguments are given',
             test: async () => {
                 await cli([], fullPackageExampleDir);
             },

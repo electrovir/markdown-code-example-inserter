@@ -43,6 +43,17 @@ export async function insertAllExamples(
     return markdownContents;
 }
 
+export async function isCodeUpdated(
+    markdownPath: string,
+    packageDir: string,
+    forceIndexPath: string | undefined,
+): Promise<boolean> {
+    const oldText = (await readFile(markdownPath)).toString();
+    const newText = await insertAllExamples(markdownPath, packageDir, forceIndexPath);
+
+    return oldText === newText;
+}
+
 export async function writeAllExamples(
     markdownPath: string,
     packageDir: string,
