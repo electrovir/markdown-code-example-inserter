@@ -140,9 +140,17 @@ export async function cli(rawArgs: string[], overrideDir?: string) {
     }
 }
 
+function errorHasMessage(error: unknown): error is {message: string} {
+    return 'message' in (error as any) && typeof (error as any).message === 'string';
+}
+
 if (require.main === module) {
     cli(process.argv.slice(2)).catch((error: unknown) => {
-        console.error(error);
+        if (errorHasMessage(error)) {
+            console.error(error.message);
+        } else {
+            console.error(error);
+        }
         process.exit(1);
     });
 }

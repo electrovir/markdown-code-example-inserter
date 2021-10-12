@@ -11,7 +11,7 @@ export function insertCodeExample(
 ): string {
     const markdownCodeBlock = `${markdownCodeBlockWrapper}${
         language ?? ''
-    }\n${fixedCode}\n${markdownCodeBlockWrapper}`;
+    }\n${fixedCode.trim()}\n${markdownCodeBlockWrapper}`;
 
     if (linkComment.linkedCodeBlock) {
         return replaceTextRange(

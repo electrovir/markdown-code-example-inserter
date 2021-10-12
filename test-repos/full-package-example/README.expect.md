@@ -14,7 +14,6 @@ Example:
 import {doThing} from 'full-package-example';
 
 console.info(doThing());
-
 ```
 
 ## Usage sub category
@@ -27,7 +26,6 @@ Sub category example:
 import {doThing} from 'full-package-example';
 
 console.info(doThing());
-
 ```
 
 ## Usage sub category 2
@@ -40,7 +38,6 @@ Sub category 2 example:
 import {doThing} from 'full-package-example';
 
 console.info(doThing());
-
 ```
 
 # Dev
