@@ -1,4 +1,4 @@
-#! node
+#!/usr/bin/env node
 import {promise as glob} from 'glob-promise';
 import {relative, resolve} from 'path';
 import {MarkdownCodeExampleInserterError} from './errors/markdown-code-example-inserter.error';
