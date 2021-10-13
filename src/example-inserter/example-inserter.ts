@@ -25,13 +25,14 @@ export async function insertAllExamples(
         .reduce(async (lastPromise, linkComment) => {
             await lastPromise;
             const originalCode = (await extractExampleCode(markdownPath, linkComment)).toString();
+            const language = getFileLanguageName(linkComment.linkPath);
             const fixedCode = await fixPackageImports(
                 originalCode,
                 join(packageDir, linkComment.linkPath),
                 packageDir,
+                language,
                 forceIndexPath,
             );
-            const language = getFileLanguageName(linkComment.linkPath);
             markdownContents = insertCodeExample(
                 markdownContents,
                 language,

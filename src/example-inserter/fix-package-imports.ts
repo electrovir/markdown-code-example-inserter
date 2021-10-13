@@ -2,11 +2,19 @@ import {toPosixPath} from 'augment-vir/dist/node';
 import {basename, dirname, relative} from 'path';
 import {ParsedCommandLine} from 'typescript';
 import {guessPackageIndex} from '../package-parsing/package-index';
+import {LanguageName} from './get-file-language-name';
+
+const languageImportFixMap: Partial<
+    Record<LanguageName, (code: string, regExpSafePosixPath: string, replaceName: string) => string>
+> = {
+    TypeScript: fixTypescriptImports,
+};
 
 export async function fixPackageImports(
     codeExample: string,
     codePath: string,
     packageDir: string,
+    language: LanguageName = 'TypeScript',
     forceIndexPath: string | undefined,
     /** For testing purposes. */
     overrideTsConfig?: Partial<ParsedCommandLine>,
@@ -17,20 +25,34 @@ export async function fixPackageImports(
     const packageIndex = await guessPackageIndex(packageDir, overrideTsConfig, overridePackageJson);
     // fix imports
     if (packageIndex.replaceName) {
-        const relativeIndexImportPath = toPosixPath(
+        const regExpSafePosixPath = toPosixPath(
             relative(dirname(codePath), forceIndexPath || packageIndex.indexPath),
-        );
+        ).replace(/\./g, '\\.');
 
-        newCode = newCode.replace(
-            new RegExp(`(['"\`])${relativeIndexImportPath.replace(/\.\w+$/, '')}(['"\`])`, 'g'),
-            `$1${packageIndex.replaceName}$2`,
-        );
-        if (basename(relativeIndexImportPath).startsWith('index.')) {
-            newCode = newCode.replace(
-                new RegExp(`(['"\`])${dirname(relativeIndexImportPath)}\/?(['"\`])`, 'g'),
-                `$1${packageIndex.replaceName}$2`,
-            );
+        const importFixer = languageImportFixMap[language];
+
+        if (importFixer) {
+            newCode = importFixer(newCode, regExpSafePosixPath, packageIndex.replaceName);
         }
+    }
+
+    return newCode;
+}
+
+function fixTypescriptImports(
+    code: string,
+    regExpSafePosixPath: string,
+    replaceName: string,
+): string {
+    let newCode = code.replace(
+        new RegExp(`( from ['"\`])${regExpSafePosixPath.replace(/\\\.\w+$/, '')}(['"\`])`, 'g'),
+        `$1${replaceName}$2`,
+    );
+    if (basename(regExpSafePosixPath).startsWith('index\\.')) {
+        newCode = newCode.replace(
+            new RegExp(`( from ['"\`])${dirname(regExpSafePosixPath)}\/?(['"\`])`, 'g'),
+            `$1${replaceName}$2`,
+        );
     }
 
     return newCode;

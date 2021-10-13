@@ -28,4 +28,6 @@ print('do the thing')
 
 # Dev
 
+<!-- example-link: src/readme-examples/with-string-array.example.ts -->
+
 How to do dev and testing and stuff.

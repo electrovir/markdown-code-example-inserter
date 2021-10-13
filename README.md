@@ -1,6 +1,6 @@
 # markdown-code-example-insertion
 
-Syncs code examples with markdown documentation.
+Syncs markdown documentation with code examples.
 
 # Install
 

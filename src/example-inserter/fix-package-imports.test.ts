@@ -14,6 +14,7 @@ testGroup({
                     `import blah from '../';`,
                     join(noSourceCodeDir, 'src', 'readme-examples', 'derp.ts'),
                     join(noSourceCodeDir),
+                    'TypeScript',
                     undefined,
                     {
                         options: {
@@ -39,6 +40,7 @@ testGroup({
                     `import blah from '../index';`,
                     join(noSourceCodeDir, 'src', 'readme-examples', 'derp.ts'),
                     join(noSourceCodeDir),
+                    'TypeScript',
                     undefined,
                     {
                         options: {
@@ -64,6 +66,35 @@ testGroup({
                     `import blah from '..';`,
                     join(noSourceCodeDir, 'src', 'readme-examples', 'derp.ts'),
                     join(noSourceCodeDir),
+                    'TypeScript',
+                    undefined,
+                    {
+                        options: {
+                            outDir: 'dist',
+                            rootDir: 'src',
+                        },
+                    },
+                    {
+                        name: 'derp',
+                        main: 'dist/index.js',
+                    },
+                );
+
+                return newCode;
+            },
+        });
+
+        runTest({
+            expect: `import blah from 'derp';
+                    const thingie = ['yo hi there', 'hello to you too'];`,
+            description: 'fix index file imports and nothing else',
+            test: async () => {
+                const newCode = fixPackageImports(
+                    `import blah from '..';
+                    const thingie = ['yo hi there', 'hello to you too'];`,
+                    join(noSourceCodeDir, 'src', 'readme-examples', 'derp.ts'),
+                    join(noSourceCodeDir),
+                    'TypeScript',
                     undefined,
                     {
                         options: {
