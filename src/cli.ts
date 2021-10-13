@@ -124,7 +124,7 @@ export async function cli(rawArgs: string[], overrideDir?: string) {
                 const errorWrapper = new MarkdownCodeExampleInserterError(
                     `Errored on ${relativeFilePath}: ${String(error)}`,
                 );
-                console.error(errorWrapper);
+                console.error(errorWrapper.message);
                 errors.push(errorWrapper);
             }
         }),
