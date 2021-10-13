@@ -42,19 +42,22 @@ console.info(doThing());
 
 # Dev
 
-<!-- example-link: src/readme-examples/with-string-array.example.ts -->
+-   stuff here
+    <!-- example-link: src/readme-examples/with-string-array.example.ts -->
 
-```TypeScript
-import {doThing} from 'full-package-example';
+    ```TypeScript
+    import {doThing} from 'full-package-example';
 
-async function main() {
-    // used to test a previous bug where package import replacements were too loose
-    const myFiles = ['path-to-my-test-file.js', 'path-to-another-file.js'];
+    async function main() {
+        // used to test a previous bug where package import replacements were too loose
+        const myFiles = ['path-to-my-test-file.js', 'path-to-another-file.js'];
 
-    const results = myFiles.forEach(() => doThing());
-}
+        const results = myFiles.forEach(() => doThing());
+    }
 
-main();
-```
+    main();
+    ```
+
+-   more stuff
 
 How to do dev and testing and stuff.
