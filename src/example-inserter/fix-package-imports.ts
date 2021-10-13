@@ -1,4 +1,4 @@
-import {toPosixPath} from 'augment-vir';
+import {toPosixPath} from 'augment-vir/dist/node';
 import {basename, dirname, relative} from 'path';
 import {ParsedCommandLine} from 'typescript';
 import {guessPackageIndex} from '../package-parsing/package-index';
