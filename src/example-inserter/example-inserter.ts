@@ -1,6 +1,7 @@
 import {readFile, writeFile} from 'fs-extra';
 import {join} from 'path';
 import {extractLinks} from '../parsing-markdown/extract-links';
+import {fixCodeIndents} from './code-indent';
 import {extractExampleCode} from './extract-example';
 import {fixPackageImports} from './fix-package-imports';
 import {getFileLanguageName} from './get-file-language-name';
@@ -26,17 +27,18 @@ export async function insertAllExamples(
             await lastPromise;
             const originalCode = (await extractExampleCode(markdownPath, linkComment)).toString();
             const language = getFileLanguageName(linkComment.linkPath);
-            const fixedCode = await fixPackageImports(
+            const importFixedCode = await fixPackageImports(
                 originalCode,
                 join(packageDir, linkComment.linkPath),
                 packageDir,
                 language,
                 forceIndexPath,
             );
+            const indentFixedCode = fixCodeIndents(importFixedCode, linkComment.indent);
             markdownContents = insertCodeExample(
                 markdownContents,
                 language,
-                fixedCode,
+                indentFixedCode,
                 linkComment,
             );
         }, Promise.resolve());

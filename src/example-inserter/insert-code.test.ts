@@ -90,6 +90,7 @@ testGroup({
                                 end: {offset: 3 + 'linked comment here'.length},
                             },
                         },
+                        indent: '',
                     } as Readonly<CodeExampleLink>,
                 );
 
@@ -118,6 +119,7 @@ testGroup({
                                 end: {offset: 62},
                             },
                         },
+                        indent: '',
                     } as Readonly<CodeExampleLink>,
                 );
 

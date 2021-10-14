@@ -3,7 +3,7 @@ import {testGroup} from 'test-vir';
 import {MarkdownCodeExampleInserterError} from '../errors/markdown-code-example-inserter.error';
 import {noSourceCodeFiles} from '../repo-paths';
 import {linkCommentTriggerPhrase} from '../trigger-phrase';
-import {extractLinks} from './extract-links';
+import {extractIndent, extractLinks, FullyPositionedNode} from './extract-links';
 
 testGroup({
     description: extractLinks.name,
@@ -98,6 +98,50 @@ testGroup({
                 }
 
                 return firstLink.node.position.end.line;
+            },
+        });
+    },
+});
+
+testGroup({
+    description: extractIndent.name,
+    tests: (runTest) => {
+        runTest({
+            expect: '',
+            description: "extracts no indent if the line text doesn't start with the node",
+            test: () => {
+                const indent = extractIndent('aaa derp', {
+                    value: 'derp',
+                    position: {start: {column: 4}},
+                } as {value: unknown} & FullyPositionedNode);
+
+                return indent;
+            },
+        });
+
+        runTest({
+            expect: '    ',
+            description: 'extracts leading spaces when line starts with the node',
+            test: () => {
+                const indent = extractIndent('    derp', {
+                    value: 'derp',
+                    position: {start: {column: 5}},
+                } as {value: unknown} & FullyPositionedNode);
+
+                return indent;
+            },
+        });
+
+        runTest({
+            expect: '\t\t\t\t',
+            description: 'extracts leading tabs when line starts with the node',
+            test: () => {
+                const indent = extractIndent('\t\t\t\tderp', {
+                    value: 'derp',
+                    position: {start: {column: 5}},
+                } as {value: unknown} & FullyPositionedNode);
+
+                return indent;
             },
         });
     },

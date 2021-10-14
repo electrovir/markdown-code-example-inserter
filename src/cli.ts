@@ -135,6 +135,7 @@ export async function cli(rawArgs: string[], overrideDir?: string) {
                 'Code in Markdown file(s) is out of date. Run without --check to update.',
             );
         } else {
+            errors.forEach((error) => console.error(error));
             throw new MarkdownCodeExampleInserterError(`Code insertion into Markdown failed.`);
         }
     }

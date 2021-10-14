@@ -9,15 +9,15 @@ export function insertCodeExample(
     fixedCode: string,
     linkComment: Readonly<CodeExampleLink>,
 ): string {
-    const markdownCodeBlock = `${markdownCodeBlockWrapper}${
+    const markdownCodeBlock = `${linkComment.indent}${markdownCodeBlockWrapper}${
         language ?? ''
-    }\n${fixedCode.trim()}\n${markdownCodeBlockWrapper}`;
+    }\n${fixedCode}\n${linkComment.indent}${markdownCodeBlockWrapper}`;
 
     if (linkComment.linkedCodeBlock) {
         return replaceTextRange(
             markdownText,
             [
-                linkComment.linkedCodeBlock.position.start.offset,
+                linkComment.linkedCodeBlock.position.start.offset - linkComment.indent.length,
                 linkComment.linkedCodeBlock.position.end.offset,
             ],
             markdownCodeBlock,

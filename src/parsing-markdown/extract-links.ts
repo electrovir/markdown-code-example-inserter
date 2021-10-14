@@ -22,6 +22,7 @@ export interface FullyPositionedNode extends Node {
 export type CodeExampleLink = {
     node: Readonly<Comment & FullyPositionedNode>;
     linkPath: string;
+    indent: string;
     linkedCodeBlock: Readonly<Code & FullyPositionedNode> | undefined;
 };
 
@@ -29,20 +30,55 @@ function isExampleLinkComment(input: Node): input is Comment {
     return isCommentNode(input) && input.value.trim().startsWith(linkCommentTriggerPhrase);
 }
 
+export function extractIndent(
+    line: string,
+    node: Readonly<{value: unknown} & FullyPositionedNode>,
+): string {
+    if (typeof node.value === 'string' && line.trim().startsWith(node.value)) {
+        return line.substring(
+            0,
+            // column is 1 indexed so we must remove 1 from it
+            node.position.start.column - 1,
+        );
+    }
+
+    return '';
+}
+
 export function extractLinks(
     markdownFileContents: string | Readonly<Buffer>,
 ): Readonly<CodeExampleLink>[] {
     const parsedRoot = parseMarkdownContents(markdownFileContents);
-    const comments: Readonly<Comment>[] = [];
-    const codeBlocks: Record<number, Readonly<Code>> = {};
+    const markdownLines = markdownFileContents.toString().split('\n');
+    const commentData: {
+        comment: Comment;
+        indent: string;
+        codeBlock?: Readonly<Code & FullyPositionedNode> | undefined;
+    }[] = [];
 
     let lastNode: Node | undefined;
-    let lastHtmlNode: (HTML & FullyPositionedNode) | undefined;
+    let lastHtmlNode: {htmlNode: HTML & FullyPositionedNode; indent: string} | undefined;
 
     walk(parsedRoot, 'markdown', (node, language) => {
-        if (language === 'markdown' && node.type === 'html') {
+        const lastComment = commentData[commentData.length - 1];
+
+        if (language === 'markdown' && isHtmlNode(node)) {
             assertFullyPositionedNode(node);
-            lastHtmlNode = node as HTML & FullyPositionedNode;
+            const htmlLine =
+                markdownLines[
+                    // line is 1 indexed
+                    node.position.start.line - 1
+                ];
+            if (!htmlLine) {
+                throw new InvalidNodeError(
+                    node,
+                    `this HTML node's position.start.line is not actually a valid line number from the file it's in`,
+                );
+            }
+            lastHtmlNode = {
+                htmlNode: node,
+                indent: extractIndent(htmlLine, node),
+            };
         } else if (language === 'html' && isExampleLinkComment(node)) {
             if (!lastHtmlNode) {
                 throw new InvalidNodeError(
@@ -51,32 +87,36 @@ export function extractLinks(
                 );
             }
             assertFullyPositionedNode(node);
-            const newNode = offsetNodePosition(node, lastHtmlNode);
+            const newNode = offsetNodePosition(node, lastHtmlNode.htmlNode);
             node = newNode;
-            comments.push(newNode);
+            commentData.push({comment: newNode, indent: lastHtmlNode.indent});
         } else if (
             language === 'markdown' &&
-            lastNode === comments[comments.length - 1] &&
+            lastComment &&
+            lastNode === lastComment.comment &&
             isCodeBlock(node)
         ) {
-            codeBlocks[comments.length - 1] = node;
+            assertFullyPositionedNode(node);
+            lastComment.codeBlock = node;
         }
         lastNode = node;
     });
 
-    return comments.map((comment, commentIndex): CodeExampleLink => {
-        assertFullyPositionedNode(comment);
-        const codeBlock = codeBlocks[commentIndex];
-        if (codeBlock) {
-            assertFullyPositionedNode(codeBlock);
-        }
+    const codeExampleLinks = commentData.map((comment): CodeExampleLink => {
+        assertFullyPositionedNode(comment.comment);
 
         return {
-            node: comment,
-            linkPath: comment.value.trim().replace(startsWithTriggerPhraseRegExp, '').trim(),
-            linkedCodeBlock: codeBlock,
+            node: comment.comment,
+            indent: comment.indent,
+            linkPath: comment.comment.value
+                .trim()
+                .replace(startsWithTriggerPhraseRegExp, '')
+                .trim(),
+            linkedCodeBlock: comment.codeBlock,
         };
     });
+
+    return codeExampleLinks;
 }
 
 function offsetNodePosition<T extends Node>(
@@ -99,6 +139,10 @@ function offsetNodePosition<T extends Node>(
             },
         },
     };
+}
+
+function isHtmlNode(input: Node): input is HTML {
+    return input.type === 'html';
 }
 
 export function assertFullyPositionedNode(node: Node): asserts node is FullyPositionedNode {
