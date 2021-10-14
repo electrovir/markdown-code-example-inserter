@@ -1,5 +1,5 @@
 import {toPosixPath} from 'augment-vir/dist/node';
-import {basename, dirname, relative} from 'path';
+import {dirname, posix, relative} from 'path';
 import {ParsedCommandLine} from 'typescript';
 import {guessPackageIndex} from '../package-parsing/package-index';
 import {LanguageName} from './get-file-language-name';
@@ -48,9 +48,9 @@ function fixTypescriptImports(
         new RegExp(`( from ['"\`])${regExpSafePosixPath.replace(/\\\.\w+$/, '')}(['"\`])`, 'g'),
         `$1${replaceName}$2`,
     );
-    if (basename(regExpSafePosixPath).startsWith('index\\.')) {
+    if (posix.basename(regExpSafePosixPath).startsWith('index\\.')) {
         newCode = newCode.replace(
-            new RegExp(`( from ['"\`])${dirname(regExpSafePosixPath)}\/?(['"\`])`, 'g'),
+            new RegExp(`( from ['"\`])${posix.dirname(regExpSafePosixPath)}\/?(['"\`])`, 'g'),
             `$1${replaceName}$2`,
         );
     }
