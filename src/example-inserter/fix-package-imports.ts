@@ -1,4 +1,4 @@
-import {toPosixPath} from 'augment-vir/dist/node';
+import {toPosixPath} from 'augment-vir/dist/node-only';
 import {dirname, posix, relative} from 'path';
 import {ParsedCommandLine} from 'typescript';
 import {guessPackageIndex} from '../package-parsing/package-index';
@@ -44,15 +44,18 @@ function fixTypescriptImports(
     regExpSafePosixPath: string,
     replaceName: string,
 ): string {
-    let newCode = code.replace(
-        new RegExp(`( from ['"\`])${regExpSafePosixPath.replace(/\\\.\w+$/, '')}(['"\`])`, 'g'),
-        `$1${replaceName}$2`,
+    const indexFileImportRegExp = new RegExp(
+        `( from ['"\`])${regExpSafePosixPath.replace(/\\\.\w+$/, '')}(['"\`])`,
+        'g',
     );
+    const bareIndexDirImportRegExp = new RegExp(
+        `( from ['"\`])${posix.dirname(regExpSafePosixPath)}\/?(['"\`])`,
+        'g',
+    );
+
+    let newCode = code.replace(indexFileImportRegExp, `$1${replaceName}$2`);
     if (posix.basename(regExpSafePosixPath).startsWith('index\\.')) {
-        newCode = newCode.replace(
-            new RegExp(`( from ['"\`])${posix.dirname(regExpSafePosixPath)}\/?(['"\`])`, 'g'),
-            `$1${replaceName}$2`,
-        );
+        newCode = newCode.replace(bareIndexDirImportRegExp, `$1${replaceName}$2`);
     }
 
     return newCode;
