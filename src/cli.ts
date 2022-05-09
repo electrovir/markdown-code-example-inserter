@@ -56,7 +56,10 @@ export async function parseArgs(args: string[]): Promise<CliInputs> {
         globs.map(async (globString) => {
             const paths = await glob(globString, {
                 nodir: true,
-                ignore: [...ignoreList, './**/node_modules/**'],
+                ignore: [
+                    ...ignoreList,
+                    './**/node_modules/**',
+                ],
             });
             if (paths.length) {
                 inputFiles.push(...paths.map((path) => relative(process.cwd(), path)));

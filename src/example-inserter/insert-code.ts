@@ -32,7 +32,14 @@ export function insertCodeExample(
 }
 
 export function insertText(text: string, insertAtThisIndex: number, insertion: string): string {
-    return replaceTextRange(text, [insertAtThisIndex, insertAtThisIndex], insertion);
+    return replaceTextRange(
+        text,
+        [
+            insertAtThisIndex,
+            insertAtThisIndex,
+        ],
+        insertion,
+    );
 }
 
 export function replaceTextRange(

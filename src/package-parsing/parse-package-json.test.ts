@@ -1,35 +1,23 @@
 import {join} from 'path';
-import {testGroup} from 'test-vir';
 import {fullPackageExampleDir, noSourceCodeDir} from '../repo-paths';
 import {readPackageDetails} from './parse-package-json';
 
-testGroup({
-    description: readPackageDetails.name,
-    tests: (runTest) => {
-        runTest({
-            expect: {
-                packageName: 'full-package-example',
-                mainPath: join(fullPackageExampleDir, 'dist', 'index.js'),
-            },
-            description: 'reads package json details',
-            test: async () => {
-                const packageDetails = readPackageDetails(fullPackageExampleDir);
+describe(readPackageDetails.name, () => {
+    it('reads package json details', async () => {
+        const packageDetails = await readPackageDetails(fullPackageExampleDir);
 
-                return packageDetails;
-            },
+        expect(packageDetails).toEqual({
+            packageName: 'full-package-example',
+            mainPath: join(fullPackageExampleDir, 'dist', 'index.js'),
         });
+    });
 
-        runTest({
-            expect: {
-                mainPath: undefined,
-                packageName: undefined,
-            },
-            description: 'returns empty properties when no package.json',
-            test: async () => {
-                const packageDetails = readPackageDetails(noSourceCodeDir);
+    it('returns empty properties when no package.json', async () => {
+        const packageDetails = await readPackageDetails(noSourceCodeDir);
 
-                return packageDetails;
-            },
+        expect(packageDetails).toEqual({
+            packageName: undefined,
+            mainPath: undefined,
         });
-    },
+    });
 });

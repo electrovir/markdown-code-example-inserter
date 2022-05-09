@@ -4,9 +4,11 @@ const path = require('path');
 const plugins = [
     'prettier-plugin-sort-json',
     'prettier-plugin-packagejson',
+    'prettier-plugin-multiline-arrays',
     'prettier-plugin-organize-imports',
     'prettier-plugin-jsdoc',
 ].map((pluginName) => {
+    // account for installations where deps are flattened and installations where they're nested
     const defaultPath = `./node_modules/${pluginName}`;
     if (fs.existsSync(path.resolve(__dirname, defaultPath))) {
         return defaultPath;
@@ -15,7 +17,13 @@ const plugins = [
     }
 });
 
-module.exports = {
+/**
+ * @typedef {import('prettier-plugin-multiline-arrays').MultilineArrayOptions} MultilineOptions
+ *
+ * @typedef {import('prettier').Options} PrettierOptions
+ * @type {PrettierOptions & MultilineOptions}
+ */
+const prettierConfig = {
     arrowParens: 'always',
     bracketSpacing: false,
     endOfLine: 'lf',
@@ -28,3 +36,5 @@ module.exports = {
     tabWidth: 4,
     trailingComma: 'all',
 };
+
+module.exports = prettierConfig;

@@ -1,56 +1,39 @@
 import {readFile} from 'fs-extra';
-import {testGroup} from 'test-vir';
 import {fullPackageExampleDir, fullPackageExampleFiles} from '../repo-paths';
 import {insertAllExamples, isCodeUpdated} from './example-inserter';
 
-testGroup({
-    description: insertAllExamples.name,
-    tests: async (runTest) => {
-        runTest({
-            expect: (await readFile(fullPackageExampleFiles.readmeExpectation)).toString(),
-            description: 'correctly inserts examples into markdown file with no code blocks',
-            test: async () => {
-                const codeInsertedMarkdown = await insertAllExamples(
-                    fullPackageExampleFiles.readme,
-                    fullPackageExampleDir,
-                    undefined,
-                );
+describe(insertAllExamples.name, () => {
+    it('should inserts examples into markdown file with no code blocks', async () => {
+        const codeInsertedMarkdown = await insertAllExamples(
+            fullPackageExampleFiles.readme,
+            fullPackageExampleDir,
+            undefined,
+        );
 
-                return codeInsertedMarkdown;
-            },
-        });
-    },
+        const expectation = (await readFile(fullPackageExampleFiles.readmeExpectation)).toString();
+
+        expect(codeInsertedMarkdown).toBe(expectation);
+    });
 });
 
-testGroup({
-    description: isCodeUpdated.name,
-    tests: async (runTest) => {
-        runTest({
-            expect: false,
-            description: 'correctly reads out of date markdown as outdated',
-            test: async () => {
-                const updated = await isCodeUpdated(
-                    fullPackageExampleFiles.readme,
-                    fullPackageExampleDir,
-                    undefined,
-                );
+describe(isCodeUpdated.name, () => {
+    it('should read out of date markdown as outdated', async () => {
+        const updated = await isCodeUpdated(
+            fullPackageExampleFiles.readme,
+            fullPackageExampleDir,
+            undefined,
+        );
 
-                return updated;
-            },
-        });
+        expect(updated).toBe(false);
+    });
 
-        runTest({
-            expect: true,
-            description: 'correctly reads updated markdown as updated',
-            test: async () => {
-                const updated = await isCodeUpdated(
-                    fullPackageExampleFiles.readmeExpectation,
-                    fullPackageExampleDir,
-                    undefined,
-                );
+    it('should read updated markdown as updated', async () => {
+        const updated = await isCodeUpdated(
+            fullPackageExampleFiles.readmeExpectation,
+            fullPackageExampleDir,
+            undefined,
+        );
 
-                return updated;
-            },
-        });
-    },
+        expect(updated).toBe(true);
+    });
 });

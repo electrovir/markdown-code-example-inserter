@@ -1,48 +1,30 @@
-import {testGroup} from 'test-vir';
 import {CodeExampleFileMissingError} from '../errors/code-example-file-missing.error';
 import {CodeExampleLink} from '../parsing-markdown/extract-links';
 import {noSourceCodeFiles} from '../repo-paths';
 import {extractExamplePath} from './extract-example';
 
-testGroup({
-    description: extractExamplePath.name,
-    tests: (runTest) => {
-        runTest({
-            expect: noSourceCodeFiles.comment,
-            description: 'correctly checks links relative to the given markdown file',
-            test: async () => {
-                const paths = extractExamplePath(noSourceCodeFiles.linkPaths, {
-                    linkPath: 'comment.md',
-                } as CodeExampleLink);
+describe(extractExamplePath.name, () => {
+    it('correctly checks links relative to the given markdown file', () => {
+        const paths = extractExamplePath(noSourceCodeFiles.linkPaths, {
+            linkPath: 'comment.md',
+        } as CodeExampleLink);
 
-                return paths;
-            },
-        });
+        expect(paths).toBe(noSourceCodeFiles.comment);
+    });
 
-        runTest({
-            expect: noSourceCodeFiles.invalidLinkComments,
-            description: 'correctly checks links relative to the given markdown file 2',
-            test: async () => {
-                const paths = extractExamplePath(noSourceCodeFiles.linkPaths, {
-                    linkPath: 'invalid-link-comments.md',
-                } as CodeExampleLink);
+    it('correctly checks links relative to the given markdown file 2', () => {
+        const paths = extractExamplePath(noSourceCodeFiles.linkPaths, {
+            linkPath: 'invalid-link-comments.md',
+        } as CodeExampleLink);
 
-                return paths;
-            },
-        });
+        expect(paths).toBe(noSourceCodeFiles.invalidLinkComments);
+    });
 
-        runTest({
-            expectError: {
-                errorClass: CodeExampleFileMissingError,
-            },
-            description: 'errors when files are missing',
-            test: async () => {
-                const paths = extractExamplePath(noSourceCodeFiles.linkPaths, {
-                    linkPath: 'this-does-not-exist',
-                } as CodeExampleLink);
-
-                return paths;
-            },
-        });
-    },
+    it('errors when files are missing', () => {
+        expect(() => {
+            extractExamplePath(noSourceCodeFiles.linkPaths, {
+                linkPath: 'this-does-not-exist',
+            } as CodeExampleLink);
+        }).toThrow(CodeExampleFileMissingError);
+    });
 });

@@ -36,7 +36,19 @@ Any of the file names can be a glob. Put the glob in quotes if you wish to preve
 npx md-code "./*.md"
 ```
 
+### Check only
+
+Use `--check`.
+
+Check if the given files are updated, don't write anything.
+
+```bash
+npx md-code file1.md --check
+```
+
 ### Force an index file
+
+Use `--index`.
 
 Force an index file for imports that should be rewritten with your package name:
 
@@ -48,13 +60,23 @@ The index file is used to replace relative imports with package name imports. Li
 
 ### Ignore a pattern
 
+Use `--ignore`.
+
 ```bash
 npx md-code "./**/*.md" --ignore "./test-repos/**/*"
 ```
 
-Multiple `--ignore` patterns can be used. `node_modules` is automatically ignored.
+Multiple `--ignore` patterns can be used:
+
+```bash
+npx md-code "./**/*.md" --ignore "./test-repos/**/*" -ignore "./test-files/**/*"
+```
+
+`node_modules` is automatically ignored.
 
 ### Turn off logging
+
+Use `--silent`
 
 ```bash
 npx md-code --silent file1.md

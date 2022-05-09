@@ -1,17 +1,9 @@
-import {testGroup} from 'test-vir';
 import {fixCodeIndents} from './code-indent';
 
-testGroup({
-    description: fixCodeIndents.name,
-    tests: (runTest) => {
-        runTest({
-            expect: ' a b c d e',
-            description: 'adds an indent',
-            test: () => {
-                const replacedLines = fixCodeIndents('a b c d e', ' ');
+describe(fixCodeIndents.name, () => {
+    it('should add an indent', () => {
+        const replacedLines = fixCodeIndents('a b c d e', ' ');
 
-                return replacedLines;
-            },
-        });
-    },
+        expect(replacedLines).toBe(' a b c d e');
+    });
 });
