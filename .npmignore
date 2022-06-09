@@ -18,3 +18,4 @@ test-repos/
 tsconfig-base.json
 tsconfig.json
 .virmator/
+dist/repo-path*

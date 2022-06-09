@@ -91,7 +91,7 @@ export async function cli(rawArgs: string[], overrideDir?: string) {
     }
     const errors: MarkdownCodeExampleInserterError[] = [];
     await Promise.all(
-        args.files.map(async (relativeFilePath) => {
+        args.files.sort().map(async (relativeFilePath) => {
             try {
                 if (args.checkOnly) {
                     const upToDate = await isCodeUpdated(
