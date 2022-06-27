@@ -1,5 +1,9 @@
 import {combineErrors, extractErrorMessage, getObjectTypedKeys, Overwrite} from 'augment-vir';
-import {runShellCommand, ShellOutput} from 'augment-vir/dist/cjs/node-only';
+import {
+    interpolationSafeWindowsPath,
+    runShellCommand,
+    ShellOutput,
+} from 'augment-vir/dist/cjs/node-only';
 import {join} from 'path';
 import {fullPackageExampleDir, fullPackageExampleFiles} from './repo-paths';
 
@@ -13,7 +17,7 @@ async function runCli(
     message = '',
 ) {
     const cliBinPath = join(process.cwd(), 'dist', 'cli.js');
-    const commandToRun = `node ${cliBinPath} ${args.join(' ')}`;
+    const commandToRun = interpolationSafeWindowsPath(`node ${cliBinPath} ${args.join(' ')}`);
 
     const results = await runShellCommand(commandToRun, {
         cwd: dir,

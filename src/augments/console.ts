@@ -12,12 +12,13 @@ export function createOrderedLogging(): (
         }
     >();
 
-    function logInOrder(index: number) {
-        const forLoggingNow = forFutureLogging.get(index);
+    function logInOrder() {
+        const forLoggingNow = forFutureLogging.get(currentIndex);
 
-        if (currentIndex === index && forLoggingNow) {
+        if (forLoggingNow) {
             forLoggingNow.consoleMethod.apply(console, forLoggingNow.args);
-            logInOrder(index + 1);
+            currentIndex++;
+            logInOrder();
         }
     }
 
@@ -26,7 +27,7 @@ export function createOrderedLogging(): (
             consoleMethod,
             args,
         });
-        logInOrder(index);
+        logInOrder();
     }
 
     return setAndLogInOrder;
