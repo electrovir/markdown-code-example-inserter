@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import {promise as glob} from 'glob-promise';
 import {relative, resolve} from 'path';
+import {createOrderedLogging} from './augments/console';
 import {MarkdownCodeExampleInserterError} from './errors/markdown-code-example-inserter.error';
 import {OutOfDateInsertedCodeError} from './errors/out-of-date-inserted-code.error';
 import {isCodeUpdated, writeAllExamples} from './example-inserter/example-inserter';
@@ -67,7 +68,7 @@ export async function parseArgs(args: string[]): Promise<CliInputs> {
         }),
     );
 
-    const uniqueFiles = Array.from(new Set(inputFiles));
+    const uniqueFiles = Array.from(new Set(inputFiles)).sort();
 
     return {
         forceIndex,
@@ -90,8 +91,10 @@ export async function cli(rawArgs: string[], overrideDir?: string) {
         }
     }
     const errors: MarkdownCodeExampleInserterError[] = [];
+    const orderedLog = createOrderedLogging();
+
     await Promise.all(
-        args.files.sort().map(async (relativeFilePath) => {
+        args.files.map(async (relativeFilePath, index) => {
             try {
                 if (args.checkOnly) {
                     const upToDate = await isCodeUpdated(
@@ -101,11 +104,15 @@ export async function cli(rawArgs: string[], overrideDir?: string) {
                     );
                     if (upToDate) {
                         if (!args.silent) {
-                            console.info(`    ${relativeFilePath}: up to date`);
+                            orderedLog(index, console.info, `    ${relativeFilePath}: up to date`);
                         }
                     } else {
                         if (!args.silent) {
-                            console.error(`    ${relativeFilePath}: NOT up to date`);
+                            orderedLog(
+                                index,
+                                console.error,
+                                `    ${relativeFilePath}: NOT up to date`,
+                            );
                         }
                         errors.push(
                             new OutOfDateInsertedCodeError(
@@ -115,7 +122,7 @@ export async function cli(rawArgs: string[], overrideDir?: string) {
                     }
                 } else {
                     if (!args.silent) {
-                        console.info(`    ${relativeFilePath}`);
+                        orderedLog(index, console.info, `    ${relativeFilePath}`);
                     }
                     await writeAllExamples(
                         resolve(relativeFilePath),
