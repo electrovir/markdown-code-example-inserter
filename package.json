@@ -35,7 +35,7 @@
         "format": "virmator format write",
         "prepublishOnly": "npm run test:full && npm run build",
         "spellcheck": "virmator spellcheck",
-        "test": "virmator test",
+        "test": "npm run build && virmator test",
         "test:full": "npm test && npm run spellcheck && virmator format check"
     },
     "dependencies": {
