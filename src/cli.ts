@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import {existsSync} from 'fs';
 import {promise as glob} from 'glob-promise';
 import {relative, resolve} from 'path';
 import {createOrderedLogging} from './augments/console';
@@ -49,6 +50,8 @@ export async function parseArgs(args: string[]): Promise<CliInputs> {
             lastArgWasIgnoreTrigger = false;
         } else if (arg === silentTrigger) {
             silent = true;
+        } else if (existsSync(arg)) {
+            inputFiles.push(relative(process.cwd(), arg));
         } else {
             globs.push(arg);
         }
@@ -63,7 +66,11 @@ export async function parseArgs(args: string[]): Promise<CliInputs> {
                 ],
             });
             if (paths.length) {
-                inputFiles.push(...paths.map((path) => relative(process.cwd(), path)));
+                inputFiles.push(
+                    ...paths.map((path) => {
+                        return relative(process.cwd(), path);
+                    }),
+                );
             }
         }),
     );
@@ -80,6 +87,7 @@ export async function parseArgs(args: string[]): Promise<CliInputs> {
 
 export async function cli(rawArgs: string[], overrideDir?: string) {
     const args = await parseArgs(rawArgs);
+    // console.log({args, rawArgs});
     if (!args.files.length) {
         throw new MarkdownCodeExampleInserterError('No markdown files given to insert code into.');
     }
