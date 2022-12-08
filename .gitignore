@@ -1,2 +1,8 @@
-node_modules
-dist
+*.tgz
+*.tsbuildinfo
+.DS_Store
+/Icon?
+coverage/
+dist/
+graphics/
+node_modules/

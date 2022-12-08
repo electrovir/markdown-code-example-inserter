@@ -1,3 +1,4 @@
+import {expect} from 'chai';
 import {CodeExampleFileMissingError} from '../errors/code-example-file-missing.error';
 import {CodeExampleLink} from '../parsing-markdown/extract-links';
 import {noSourceCodeFiles} from '../repo-paths';
@@ -9,7 +10,7 @@ describe(extractExamplePath.name, () => {
             linkPath: 'comment.md',
         } as CodeExampleLink);
 
-        expect(paths).toBe(noSourceCodeFiles.comment);
+        expect(paths).to.equal(noSourceCodeFiles.comment);
     });
 
     it('correctly checks links relative to the given markdown file 2', () => {
@@ -17,7 +18,7 @@ describe(extractExamplePath.name, () => {
             linkPath: 'invalid-link-comments.md',
         } as CodeExampleLink);
 
-        expect(paths).toBe(noSourceCodeFiles.invalidLinkComments);
+        expect(paths).to.equal(noSourceCodeFiles.invalidLinkComments);
     });
 
     it('errors when files are missing', () => {
@@ -25,6 +26,6 @@ describe(extractExamplePath.name, () => {
             extractExamplePath(noSourceCodeFiles.linkPaths, {
                 linkPath: 'this-does-not-exist',
             } as CodeExampleLink);
-        }).toThrow(CodeExampleFileMissingError);
+        }).throws(CodeExampleFileMissingError);
     });
 });

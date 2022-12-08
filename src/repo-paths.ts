@@ -5,9 +5,9 @@ export const repoRootDir = __dirname.replace(
     '',
 );
 
-const testReposDir = join(repoRootDir, 'test-repos');
+const testFilesDirPath = join(repoRootDir, 'test-files');
 
-export const noSourceCodeDir = join(testReposDir, 'no-source-code');
+export const noSourceCodeDir = join(testFilesDirPath, 'no-source-code');
 export const noSourceCodeFiles = {
     comment: join(noSourceCodeDir, 'comment.md'),
     invalidLinkComments: join(noSourceCodeDir, 'invalid-link-comments.md'),
@@ -15,13 +15,13 @@ export const noSourceCodeFiles = {
     linkWithCode: join(noSourceCodeDir, 'link-with-code.md'),
 };
 
-export const fullPackageExampleDir = join(testReposDir, 'full-package-example');
+export const fullPackageExampleDir = join(testFilesDirPath, 'full-package-example');
 export const fullPackageExampleFiles = {
     readme: join(fullPackageExampleDir, 'README.md'),
     readmeExpectation: join(fullPackageExampleDir, 'README.expect.md'),
 };
 
-export const extendingTsConfigDir = join(testReposDir, 'extending-ts-config');
+export const extendingTsConfigDir = join(testFilesDirPath, 'extending-ts-config');
 export const extendingTsConfigFiles = {
     sourceDir: join(extendingTsConfigDir, 'src'),
     distDir: join(extendingTsConfigDir, 'dist'),

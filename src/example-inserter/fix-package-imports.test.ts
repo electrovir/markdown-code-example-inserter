@@ -1,3 +1,4 @@
+import {expect} from 'chai';
 import {join} from 'path';
 import {noSourceCodeDir} from '../repo-paths';
 import {fixPackageImports} from './fix-package-imports';
@@ -22,7 +23,7 @@ describe(fixPackageImports.name, () => {
             },
         );
 
-        expect(newCode).toBe(`import blah from 'derp';`);
+        expect(newCode).to.equal(`import blah from 'derp';`);
     });
 
     it('fix index file imports with file name', async () => {
@@ -44,7 +45,7 @@ describe(fixPackageImports.name, () => {
             },
         );
 
-        expect(newCode).toBe(`import blah from 'derp';`);
+        expect(newCode).to.equal(`import blah from 'derp';`);
     });
 
     it('fix index file imports no trailing slash', async () => {
@@ -66,7 +67,7 @@ describe(fixPackageImports.name, () => {
             },
         );
 
-        expect(newCode).toBe(`import blah from 'derp';`);
+        expect(newCode).to.equal(`import blah from 'derp';`);
     });
 
     it('fix index file imports and nothing else', async () => {
@@ -89,7 +90,7 @@ describe(fixPackageImports.name, () => {
             },
         );
 
-        expect(newCode).toBe(`import blah from 'derp';
+        expect(newCode).to.equal(`import blah from 'derp';
                     const thingie = ['yo hi there', 'hello to you too'];`);
     });
 });

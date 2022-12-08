@@ -1,3 +1,5 @@
+import chai, {assert, expect} from 'chai';
+import chaiAsPromised from 'chai-as-promised';
 import {readFile, writeFile} from 'fs-extra';
 import {join} from 'path';
 import {cli, parseArgs} from './cli';
@@ -8,19 +10,19 @@ import {fullPackageExampleDir, fullPackageExampleFiles} from './repo-paths';
 describe(parseArgs.name, () => {
     it('no inputs results in no file paths', async () => {
         const paths = (await parseArgs([])).files;
-        expect(paths).toEqual([]);
+        expect(paths).to.deep.equal([]);
     });
 
     it('gets all .md files and ignore node_modules', async () => {
         const paths = (await parseArgs(['./**/*.md'])).files;
-        expect(paths).toEqual([
+        expect(paths).to.deep.equal([
             'README.md',
-            join('test-repos', 'full-package-example', 'README.expect.md'),
-            join('test-repos', 'full-package-example', 'README.md'),
-            join('test-repos', 'no-source-code', 'comment.md'),
-            join('test-repos', 'no-source-code', 'invalid-link-comments.md'),
-            join('test-repos', 'no-source-code', 'link-paths.md'),
-            join('test-repos', 'no-source-code', 'link-with-code.md'),
+            join('test-files', 'full-package-example', 'README.expect.md'),
+            join('test-files', 'full-package-example', 'README.md'),
+            join('test-files', 'no-source-code', 'comment.md'),
+            join('test-files', 'no-source-code', 'invalid-link-comments.md'),
+            join('test-files', 'no-source-code', 'link-paths.md'),
+            join('test-files', 'no-source-code', 'link-with-code.md'),
         ]);
     });
 
@@ -29,20 +31,20 @@ describe(parseArgs.name, () => {
             await parseArgs([
                 './**/*.md',
                 '--ignore',
-                './test-repos/**/*',
+                './test-files/**/*',
             ])
         ).files;
-        expect(paths).toEqual(['README.md']);
+        expect(paths).to.deep.equal(['README.md']);
     });
 
     it('works with raw file names', async () => {
         const paths = (await parseArgs(['README.md'])).files;
-        expect(paths).toEqual(['README.md']);
+        expect(paths).to.deep.equal(['README.md']);
     });
 
     it('works with simple glob', async () => {
         const paths = (await parseArgs(['./*.md'])).files;
-        expect(paths).toEqual(['README.md']);
+        expect(paths).to.deep.equal(['README.md']);
     });
 });
 
@@ -58,7 +60,7 @@ describe(cli.name, () => {
                 fullPackageExampleDir,
             );
             const newFileContents = (await readFile(fullPackageExampleFiles.readme)).toString();
-            expect(newFileContents).toBe(
+            expect(newFileContents).to.equal(
                 (await readFile(fullPackageExampleFiles.readmeExpectation)).toString(),
             );
         } finally {
@@ -82,7 +84,7 @@ describe(cli.name, () => {
             const newFileContents = (
                 await readFile(fullPackageExampleFiles.readmeExpectation)
             ).toString();
-            expect(newFileContents).toBe(
+            expect(newFileContents).to.equal(
                 (await readFile(fullPackageExampleFiles.readmeExpectation)).toString(),
             );
         } finally {
@@ -96,7 +98,8 @@ describe(cli.name, () => {
     });
 
     it('cli --check errors when not update to date', async () => {
-        await expect(() =>
+        chai.use(chaiAsPromised);
+        await assert.isRejected(
             cli(
                 [
                     fullPackageExampleFiles.readme,
@@ -105,7 +108,8 @@ describe(cli.name, () => {
                 ],
                 fullPackageExampleDir,
             ),
-        ).rejects.toThrow(OutOfDateInsertedCodeError);
+            OutOfDateInsertedCodeError,
+        );
     });
 
     it('cli --check does not error when code is up to date', async () => {
@@ -120,8 +124,7 @@ describe(cli.name, () => {
     });
 
     it('cli errors when no arguments are given', async () => {
-        await expect(() => cli([], fullPackageExampleDir)).rejects.toThrow(
-            MarkdownCodeExampleInserterError,
-        );
+        chai.use(chaiAsPromised);
+        await assert.isRejected(cli([], fullPackageExampleDir), MarkdownCodeExampleInserterError);
     });
 });

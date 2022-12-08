@@ -22,7 +22,7 @@ Add an HTML comment that starts with the following text: `example-link:`. Then a
 <!-- example-link: src/readme-examples/do-thing.ts -->
 ```
 
-[Here's an example](https://raw.githubusercontent.com/electrovir/markdown-code-example-inserter/main/test-repos/full-package-example/README.md) from the GitHub repo. And here is the same file [with the code examples inserted](https://github.com/electrovir/markdown-code-example-inserter/blob/main/test-repos/full-package-example/README.expect.md).
+[Here's an example](https://raw.githubusercontent.com/electrovir/markdown-code-example-inserter/main/test-files/full-package-example/README.md) from the GitHub repo. And here is the same file [with the code examples inserted](https://github.com/electrovir/markdown-code-example-inserter/blob/main/test-files/full-package-example/README.expect.md).
 
 ## CLI
 
@@ -63,13 +63,13 @@ The index file is used to replace relative imports with package name imports. Li
 Use `--ignore`.
 
 ```bash
-npx md-code "./**/*.md" --ignore "./test-repos/**/*"
+npx md-code "./**/*.md" --ignore "./test-files/**/*"
 ```
 
 Multiple `--ignore` patterns can be used:
 
 ```bash
-npx md-code "./**/*.md" --ignore "./test-repos/**/*" -ignore "./test-files/**/*"
+npx md-code "./**/*.md" --ignore "./test-files/**/*" -ignore "./test-files/**/*"
 ```
 
 `node_modules` is automatically ignored.

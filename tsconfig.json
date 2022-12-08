@@ -1,6 +1,15 @@
 {
+    "extends": "virmator/base-configs/base-tsconfig.json",
     "compilerOptions": {
-        "resolveJsonModule": true
+        "outDir": "./dist",
+        "rootDir": "./src",
+        "module": "CommonJS"
     },
-    "extends": "./tsconfig-base.json"
+    "exclude": [
+        "./configs",
+        "./coverage",
+        "./dist",
+        "./node_modules",
+        "./test-files"
+    ]
 }

@@ -1,3 +1,4 @@
+import {expect} from 'chai';
 import {CodeExampleLink} from '../parsing-markdown/extract-links';
 import {insertCodeExample, insertText, replaceTextRange} from './insert-code';
 
@@ -12,7 +13,7 @@ describe(replaceTextRange.name, () => {
             'insertion',
         );
 
-        expect(replacedLines).toBe('a b insertion e');
+        expect(replacedLines).to.equal('a b insertion e');
     });
 
     it('replaces at the beginning of the string', () => {
@@ -25,7 +26,7 @@ describe(replaceTextRange.name, () => {
             'insertion',
         );
 
-        expect(replacedLines).toBe('insertion d e');
+        expect(replacedLines).to.equal('insertion d e');
     });
 
     it('replaces at the end of the string', () => {
@@ -38,7 +39,7 @@ describe(replaceTextRange.name, () => {
             'insertion',
         );
 
-        expect(replacedLines).toBe('a b c d insertion');
+        expect(replacedLines).to.equal('a b c d insertion');
     });
 });
 
@@ -46,19 +47,19 @@ describe(insertText.name, () => {
     it('inserts into the middle of a string', () => {
         const replacedLines = insertText('a b c d e', 8, 'insertion ');
 
-        expect(replacedLines).toBe('a b c d insertion e');
+        expect(replacedLines).to.equal('a b c d insertion e');
     });
 
     it('inserts after the beginning of a string', () => {
         const replacedLines = insertText('a b c d e', 0, 'insertion ');
 
-        expect(replacedLines).toBe('insertion a b c d e');
+        expect(replacedLines).to.equal('insertion a b c d e');
     });
 
     it('inserts at the end of a string', () => {
         const replacedLines = insertText('a b c d e', 9, ' insertion');
 
-        expect(replacedLines).toBe('a b c d e insertion');
+        expect(replacedLines).to.equal('a b c d e insertion');
     });
 });
 
@@ -79,7 +80,7 @@ describe(insertCodeExample.name, () => {
             } as Readonly<CodeExampleLink>,
         );
 
-        expect(replacedLines).toBe(
+        expect(replacedLines).to.equal(
             "a\n\nlinked comment here\n\n```TypeScript\nconsole.info('derp');\n```\n\nc\n\nd\n\ne",
         );
     });
@@ -106,7 +107,7 @@ describe(insertCodeExample.name, () => {
             } as Readonly<CodeExampleLink>,
         );
 
-        expect(replacedLines).toBe(
+        expect(replacedLines).to.equal(
             "a\n\nlinked comment here\n\n```TypeScript\nconsole.info('derp');\n```\n\nb\n\nc",
         );
     });

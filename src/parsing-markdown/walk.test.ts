@@ -1,3 +1,4 @@
+import {expect} from 'chai';
 import type {Literal, Node, Parent, Position} from 'unist';
 import {noSourceCodeFiles} from '../repo-paths';
 import {parseHtmlContents, parseMarkdownContents, parseMarkdownFile} from './parse-markdown';
@@ -15,7 +16,7 @@ describe(walk.name, () => {
             nodeTypes.push(`${node.type}:${language}`);
         });
 
-        expect(nodeTypes).toEqual([
+        expect(nodeTypes).to.deep.equal([
             'root:markdown',
             'heading:markdown',
             'text:markdown',
@@ -37,7 +38,7 @@ describe(walk.name, () => {
             nodeTypes.push(`${node.type}:${language}`);
         });
 
-        expect(nodeTypes).toEqual([
+        expect(nodeTypes).to.deep.equal([
             'root:markdown',
             'heading:markdown',
             'text:markdown',
@@ -73,7 +74,7 @@ describe(walk.name, () => {
             },
         );
 
-        expect(positions).toEqual([
+        expect(positions).to.deep.equal([
             {
                 type: 'root',
                 value: undefined,
@@ -209,7 +210,7 @@ describe(walk.name, () => {
             },
         );
 
-        expect(nodeTypes).toEqual([
+        expect(nodeTypes).to.deep.equal([
             'root:html',
             'element:html',
             'text:html',
@@ -226,7 +227,7 @@ describe(walk.name, () => {
             nodeTypes.push(`${node.type}:${language}`);
         });
 
-        expect(nodeTypes).toEqual([
+        expect(nodeTypes).to.deep.equal([
             'root:html',
             'comment:html',
         ]);
@@ -245,7 +246,7 @@ describe(walk.name, () => {
             }
         });
 
-        expect(positions).toEqual([
+        expect(positions).to.deep.equal([
             {
                 type: 'text',
                 value: 'honda',

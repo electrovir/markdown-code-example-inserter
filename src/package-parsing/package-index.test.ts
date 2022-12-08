@@ -1,3 +1,4 @@
+import {expect} from 'chai';
 import {join} from 'path';
 import {extendingTsConfigDir, extendingTsConfigFiles, noSourceCodeDir} from '../repo-paths';
 import {guessPackageIndex} from './package-index';
@@ -6,7 +7,7 @@ describe(guessPackageIndex.name, () => {
     it('resolves to index.ts', async () => {
         const guessedIndex = await guessPackageIndex(extendingTsConfigDir);
 
-        expect(guessedIndex).toEqual({
+        expect(guessedIndex).to.deep.equal({
             replaceName: 'extending-ts-config',
             indexPath: join(extendingTsConfigFiles.sourceDir, 'index.ts'),
         });
@@ -19,7 +20,7 @@ describe(guessPackageIndex.name, () => {
             {name: 'test-name', main: 'blah/index.js'},
         );
 
-        expect(guessedIndex).toEqual({
+        expect(guessedIndex).to.deep.equal({
             replaceName: 'test-name',
             indexPath: join(noSourceCodeDir, 'index.ts'),
         });
@@ -40,7 +41,7 @@ describe(guessPackageIndex.name, () => {
             },
         );
 
-        expect(guessedIndex).toEqual({
+        expect(guessedIndex).to.deep.equal({
             replaceName: 'test-name',
             indexPath: join(noSourceCodeDir, 'src', 'index.ts'),
         });
@@ -53,7 +54,7 @@ describe(guessPackageIndex.name, () => {
             {name: 'test-name', main: 'blah/index.js'},
         );
 
-        expect(guessedIndex).toEqual({
+        expect(guessedIndex).to.deep.equal({
             replaceName: 'test-name',
             indexPath: join(noSourceCodeDir, 'blah', 'index.ts'),
         });
@@ -66,7 +67,7 @@ describe(guessPackageIndex.name, () => {
             {name: 'test-name', main: 'blah/index.js'},
         );
 
-        expect(guessedIndex).toEqual({
+        expect(guessedIndex).to.deep.equal({
             replaceName: 'test-name',
             indexPath: join(noSourceCodeDir, 'blah', 'index.ts'),
         });
@@ -78,7 +79,7 @@ describe(guessPackageIndex.name, () => {
             main: 'blah/index.js',
         });
 
-        expect(guessedIndex).toEqual({
+        expect(guessedIndex).to.deep.equal({
             replaceName: 'test-name',
             indexPath: join(noSourceCodeDir, 'blah', 'index.js'),
         });
@@ -90,7 +91,7 @@ describe(guessPackageIndex.name, () => {
             main: undefined,
         });
 
-        expect(guessedIndex).toEqual({
+        expect(guessedIndex).to.deep.equal({
             replaceName: 'test-name',
             indexPath: noSourceCodeDir,
         });

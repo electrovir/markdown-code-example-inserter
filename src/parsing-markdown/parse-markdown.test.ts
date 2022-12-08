@@ -1,3 +1,4 @@
+import {expect} from 'chai';
 import type {Parent} from 'unist';
 import {noSourceCodeFiles} from '../repo-paths';
 import {parseHtmlContents, parseMarkdownFile} from './parse-markdown';
@@ -7,7 +8,7 @@ describe('markdown parsing', () => {
         const parsed = await parseMarkdownFile(noSourceCodeFiles.comment);
         // prevent excessive depth checking in nodes
         delete (parsed as Partial<Parent>).children;
-        expect(parsed as Partial<Parent>).toEqual({
+        expect(parsed as Partial<Parent>).to.deep.equal({
             type: 'root',
             position: {
                 start: {
@@ -28,7 +29,7 @@ describe('markdown parsing', () => {
         const parsed = parseHtmlContents(`<!-- comment is here -->`);
         // prevent excessive depth checking in nodes
         delete (parsed as Partial<Parent>).children;
-        expect(parsed as Partial<Parent>).toEqual({
+        expect(parsed as Partial<Parent>).to.deep.equal({
             type: 'root',
             data: {
                 // idk what this means but it's in there

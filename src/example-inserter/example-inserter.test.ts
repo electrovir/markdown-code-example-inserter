@@ -1,3 +1,4 @@
+import {assert, expect} from 'chai';
 import {readFile} from 'fs-extra';
 import {fullPackageExampleDir, fullPackageExampleFiles} from '../repo-paths';
 import {insertAllExamples, isCodeUpdated} from './example-inserter';
@@ -12,7 +13,7 @@ describe(insertAllExamples.name, () => {
 
         const expectation = (await readFile(fullPackageExampleFiles.readmeExpectation)).toString();
 
-        expect(codeInsertedMarkdown).toBe(expectation);
+        expect(codeInsertedMarkdown).to.equal(expectation);
     });
 });
 
@@ -24,7 +25,7 @@ describe(isCodeUpdated.name, () => {
             undefined,
         );
 
-        expect(updated).toBe(false);
+        assert.isFalse(updated);
     });
 
     it('should read updated markdown as updated', async () => {
@@ -34,6 +35,6 @@ describe(isCodeUpdated.name, () => {
             undefined,
         );
 
-        expect(updated).toBe(true);
+        assert.isTrue(updated);
     });
 });

@@ -1,11 +1,15 @@
-import {combineErrors, extractErrorMessage, getObjectTypedKeys, Overwrite} from 'augment-vir';
 import {
-    interpolationSafeWindowsPath,
-    runShellCommand,
-    ShellOutput,
-} from 'augment-vir/dist/cjs/node-only';
+    combineErrors,
+    extractErrorMessage,
+    getObjectTypedKeys,
+    Overwrite,
+} from '@augment-vir/common';
+import {interpolationSafeWindowsPath, runShellCommand, ShellOutput} from '@augment-vir/node-js';
+import chai, {expect} from 'chai';
 import {join} from 'path';
 import {fullPackageExampleDir, fullPackageExampleFiles} from './repo-paths';
+
+chai.config.truncateThreshold = 0;
 
 async function runCli(
     args: string[],
@@ -45,9 +49,9 @@ async function runCli(
             const mismatchMessage = `\n${mismatch}\n`;
             try {
                 if (expectation instanceof RegExp) {
-                    expect(String(result)).toMatch(expectation);
+                    expect(String(result)).matches(expectation);
                 } else {
-                    expect(result).toEqual(expectation);
+                    expect(result).to.deep.equal(expectation);
                 }
             } catch (error) {
                 console.error(mismatchMessage);

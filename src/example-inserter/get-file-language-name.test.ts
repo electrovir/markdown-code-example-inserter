@@ -1,3 +1,4 @@
+import {expect} from 'chai';
 import {getFileLanguageName} from './get-file-language-name';
 
 describe(getFileLanguageName.name, () => {
@@ -16,7 +17,7 @@ describe(getFileLanguageName.name, () => {
                 'index.yml',
                 'index.xml',
             ].map((fileName) => getFileLanguageName(fileName)?.toLowerCase()),
-        ).toEqual([
+        ).to.deep.equal([
             'javascript',
             'typescript',
             'ruby',

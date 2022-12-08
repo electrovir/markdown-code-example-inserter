@@ -1,3 +1,4 @@
+import {assert, expect} from 'chai';
 import {readFile} from 'fs-extra';
 import {MarkdownCodeExampleInserterError} from '../errors/markdown-code-example-inserter.error';
 import {noSourceCodeFiles} from '../repo-paths';
@@ -22,17 +23,17 @@ describe(extractLinks.name, () => {
             ].join(' '),
         );
 
-        expect(joinedLinks).toEqual(expectation);
+        expect(joinedLinks).to.deep.equal(expectation);
     });
 
     it('exclude trigger phrase in linkPath property', async () => {
         const links = extractLinks(await readFile(noSourceCodeFiles.invalidLinkComments));
-        expect(links.map((link) => link.linkPath.trim())).toEqual(expectedLinks);
+        expect(links.map((link) => link.linkPath.trim())).to.deep.equal(expectedLinks);
     });
 
     it('no links are extracted when no comments contain the trigger phrase', async () => {
         const links = extractLinks(await readFile(noSourceCodeFiles.comment));
-        expect(links.map((link) => link.linkPath.trim())).toEqual([]);
+        expect(links.map((link) => link.linkPath.trim())).to.deep.equal([]);
     });
 
     it('includes code block', async () => {
@@ -44,7 +45,7 @@ describe(extractLinks.name, () => {
         expect([
             firstLink.node,
             firstLink.linkedCodeBlock,
-        ]).toEqual([
+        ]).to.deep.equal([
             {
                 type: 'comment',
                 value: '  example-link: comment is here ',
@@ -91,7 +92,7 @@ describe(extractLinks.name, () => {
             throw new MarkdownCodeExampleInserterError(`Wrong links extracted`);
         }
 
-        expect(firstLink.node.position.end.line).toBe(2);
+        assert.strictEqual(firstLink.node.position.end.line, 2);
     });
 });
 
@@ -102,7 +103,7 @@ describe(extractIndent.name, () => {
             position: {start: {column: 4}},
         } as {value: unknown} & FullyPositionedNode);
 
-        expect(indent).toBe('');
+        expect(indent).to.equal('');
     });
 
     it('extracts leading spaces when line starts with the node', () => {
@@ -111,7 +112,7 @@ describe(extractIndent.name, () => {
             position: {start: {column: 5}},
         } as {value: unknown} & FullyPositionedNode);
 
-        expect(indent).toBe('    ');
+        expect(indent).to.equal('    ');
     });
 
     it('extracts leading tabs when line starts with the node', () => {
@@ -120,6 +121,6 @@ describe(extractIndent.name, () => {
             position: {start: {column: 5}},
         } as {value: unknown} & FullyPositionedNode);
 
-        expect(indent).toBe('\t\t\t\t');
+        expect(indent).to.equal('\t\t\t\t');
     });
 });

@@ -1,9 +1,0 @@
-{
-    "import": ".cspell-base.json",
-    "words": [
-        "rehype",
-        "unist",
-        "mdast",
-        "nodir"
-    ]
-}
