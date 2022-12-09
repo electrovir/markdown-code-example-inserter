@@ -46,8 +46,8 @@
         "test:types": "tsc --noEmit"
     },
     "dependencies": {
-        "@augment-vir/common": "^6.1.4",
-        "@augment-vir/node-js": "^6.1.4",
+        "@augment-vir/common": "^6.1.5",
+        "@augment-vir/node-js": "^6.1.5",
         "fs-extra": "11.1.0",
         "glob-promise": "5.0.0",
         "language-map": "1.5.0",
@@ -64,21 +64,21 @@
         "@types/chai-as-promised": "^7.1.5",
         "@types/fs-extra": "9.0.13",
         "@types/mocha": "^10.0.1",
-        "@types/node": "18.11.11",
+        "@types/node": "18.11.12",
         "chai": "^4.3.7",
         "chai-as-promised": "^7.1.1",
-        "cspell": "^6.15.1",
+        "cspell": "^6.17.0",
         "istanbul-smart-text-reporter": "^1.0.1",
         "mocha": "^10.1.0",
         "mocha-spec-reporter-with-file-names": "^0.0.2",
-        "prettier": "^2.8.0",
+        "prettier": "^2.8.1",
         "prettier-plugin-jsdoc": "^0.4.2",
-        "prettier-plugin-multiline-arrays": "^1.1.1",
+        "prettier-plugin-multiline-arrays": "^1.1.2",
         "prettier-plugin-organize-imports": "^3.2.1",
         "prettier-plugin-packagejson": "^2.3.0",
         "prettier-plugin-sort-json": "^0.0.3",
         "prettier-plugin-toml": "^0.3.1",
-        "tsx": "^3.12.1",
-        "virmator": "5.0.2"
+        "ts-node": "^10.9.1",
+        "virmator": "5.0.6"
     }
 }
