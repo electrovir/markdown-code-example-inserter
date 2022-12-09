@@ -1,6 +1,6 @@
 {
     "name": "markdown-code-example-inserter",
-    "version": "0.1.12",
+    "version": "0.1.13",
     "description": "Syncs code examples with markdown documentation.",
     "keywords": [
         "automatic",
@@ -49,7 +49,7 @@
         "@augment-vir/common": "^6.1.5",
         "@augment-vir/node-js": "^6.1.5",
         "fs-extra": "11.1.0",
-        "glob-promise": "5.0.0",
+        "glob-promise": "4.2.2",
         "language-map": "1.5.0",
         "rehype-parse": "7.0.1",
         "remark-parse": "9.0.0",
