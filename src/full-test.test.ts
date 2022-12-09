@@ -84,7 +84,7 @@ describe('cli.js', () => {
     it('should produce correct output when a check fails', async () => {
         await runCli(
             [
-                join(fullPackageExampleDir, '**/*.md'),
+                `"${join(fullPackageExampleDir, '*.md')}"`,
                 '--check',
             ],
             fullPackageExampleDir,
