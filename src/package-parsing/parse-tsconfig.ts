@@ -1,7 +1,7 @@
+import {replaceWithWindowsPathIfNeeded} from '@augment-vir/node-js';
 import {existsSync} from 'fs-extra';
 import {join} from 'path';
 import {ParsedCommandLine, parseJsonConfigFileContent, readConfigFile, sys} from 'typescript';
-import {replaceWithWindowsPathIfNeeded} from '../augments/string';
 
 export type TsDirs = {
     source: string | undefined;
@@ -18,8 +18,8 @@ export function getTsDirs(
         return undefined;
     }
 
-    const source = replaceWithWindowsPathIfNeeded(configContent.options?.rootDir);
-    const output = replaceWithWindowsPathIfNeeded(configContent.options?.outDir);
+    const source = replaceWithWindowsPathIfNeeded(configContent.options?.rootDir ?? '');
+    const output = replaceWithWindowsPathIfNeeded(configContent.options?.outDir ?? '');
 
     return {source, output};
 }
