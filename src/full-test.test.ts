@@ -1,99 +1,124 @@
-import {
-    combineErrors,
-    extractErrorMessage,
-    getObjectTypedKeys,
-    Overwrite,
-} from '@augment-vir/common';
 import {interpolationSafeWindowsPath, runShellCommand, ShellOutput} from '@augment-vir/node-js';
-import chai, {expect} from 'chai';
-import {join} from 'path';
-import {fullPackageExampleDir, fullPackageExampleFiles} from './repo-paths';
+import chai, {assert} from 'chai';
+import {readFile, writeFile} from 'fs/promises';
+import {basename, join} from 'path';
+import {assertExpectation} from 'test-established-expectations';
+import {forceIndexTrigger} from './cli';
+import {forcedIndexExampleDir, fullPackageExampleDir, fullPackageExampleFiles} from './repo-paths';
 
 chai.config.truncateThreshold = 0;
 
-async function runCli(
-    args: string[],
-    dir: string,
-    expectations: Omit<
-        Overwrite<ShellOutput, {stderr: string | RegExp; stdout: string | RegExp}>,
-        'error'
-    >,
-    message = '',
-) {
+async function runCli({
+    args,
+    dir,
+    expectationKey,
+    shouldPass,
+}: {
+    args: string[];
+    dir: string;
+    expectationKey: string;
+    shouldPass: boolean;
+}) {
     const cliBinPath = join(process.cwd(), 'dist', 'cli.js');
     const commandToRun = interpolationSafeWindowsPath(`node ${cliBinPath} ${args.join(' ')}`);
 
-    const results = await runShellCommand(commandToRun, {
+    const result: Partial<ShellOutput> = await runShellCommand(commandToRun, {
         cwd: dir,
     });
 
-    if (expectations) {
-        const errors: Error[] = [];
-        getObjectTypedKeys(expectations).forEach((expectationKey) => {
-            const expectation = expectations[expectationKey];
-            const result = results[expectationKey];
+    delete result.error;
+    delete result.exitSignal;
 
-            const expectationMessage =
-                expectation instanceof RegExp ? String(expectation) : expectation;
-            // this is logged separately so that special characters (like color codes) are visible
-            const mismatch = JSON.stringify(
-                {
-                    [`${message}${message ? '-' : ''}actual-${expectationKey}`]: result,
-                    [`${message}${message ? '-' : ''}expected-${expectationKey}`]:
-                        expectationMessage,
-                },
-                null,
-                4,
-            );
+    await assertExpectation({
+        key: {
+            topKey: basename(dir),
+            subKey: expectationKey,
+        },
+        result,
+    });
 
-            const mismatchMessage = `\n${mismatch}\n`;
-            try {
-                if (expectation instanceof RegExp) {
-                    expect(String(result)).matches(expectation);
-                } else {
-                    expect(result).to.deep.equal(expectation);
-                }
-            } catch (error) {
-                console.error(mismatchMessage);
-                errors.push(new Error(extractErrorMessage(error)));
-            }
-        });
-        if (errors.length) {
-            throw combineErrors(errors);
-        }
+    if (shouldPass) {
+        assert.strictEqual(result.exitCode, 0, 'command should have passed');
+    } else {
+        assert.notStrictEqual(result.exitCode, 0, 'command should have failed');
     }
 }
 
 describe('cli.js', () => {
     it('should produce correct output when a check passes', async () => {
-        await runCli(
-            [
+        await runCli({
+            args: [
                 fullPackageExampleFiles.readmeExpectation,
                 '--check',
             ],
-            fullPackageExampleDir,
-            {
-                exitCode: 0,
-                exitSignal: undefined,
-                stderr: '',
-                stdout: 'Checking that code in markdown is up to date:\n    README.expect.md: up to date\n',
-            },
-        );
+            dir: fullPackageExampleDir,
+            expectationKey: 'successful check',
+            shouldPass: true,
+        });
     });
 
     it('should produce correct output when a check fails', async () => {
-        await runCli(
-            [
+        await runCli({
+            args: [
                 join(fullPackageExampleDir, '*.md'),
                 '--check',
             ],
-            fullPackageExampleDir,
-            {
-                exitCode: 1,
-                exitSignal: undefined,
-                stderr: '    README.md: NOT up to date\nCode in Markdown file(s) is out of date. Run without --check to update.\n',
-                stdout: 'Checking that code in markdown is up to date:\n    README.expect.md: up to date\n',
-            },
-        );
+            dir: fullPackageExampleDir,
+            expectationKey: 'failed check',
+            shouldPass: false,
+        });
+    });
+
+    it('supports forced index flag', async () => {
+        const completeMarkdownPath = join(forcedIndexExampleDir, 'complete.md');
+        const incompleteMarkdownPath = join(forcedIndexExampleDir, 'incomplete.md');
+        const incompleteContentsBeforeFixing = (await readFile(incompleteMarkdownPath)).toString();
+        try {
+            await runCli({
+                args: [
+                    completeMarkdownPath,
+                    '--check',
+                    forceIndexTrigger,
+                    'src/derp.ts',
+                ],
+                dir: forcedIndexExampleDir,
+                expectationKey: 'forced-index-complete',
+                shouldPass: true,
+            });
+
+            const completeContents = (await readFile(completeMarkdownPath)).toString();
+
+            await runCli({
+                args: [
+                    incompleteMarkdownPath,
+                    forceIndexTrigger,
+                    'src/derp.ts',
+                ],
+                dir: forcedIndexExampleDir,
+                expectationKey: 'forced-index-incomplete-fix',
+                shouldPass: true,
+            });
+
+            const incompleteContentsAfterFixing = (
+                await readFile(incompleteMarkdownPath)
+            ).toString();
+
+            assert.strictEqual(incompleteContentsAfterFixing, completeContents);
+        } catch (error) {
+        } finally {
+            await writeFile(incompleteMarkdownPath, incompleteContentsBeforeFixing);
+
+            await runCli({
+                args: [
+                    incompleteMarkdownPath,
+                    '--check',
+                    forceIndexTrigger,
+                    'src/derp.ts',
+                ],
+                dir: forcedIndexExampleDir,
+                expectationKey: 'forced-index-incomplete-reverted',
+                shouldPass: false,
+            });
+        }
     });
 });

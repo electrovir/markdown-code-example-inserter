@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import {replaceWithWindowsPathIfNeeded} from '@augment-vir/node-js';
 import {existsSync} from 'fs';
 import {promise as glob} from 'glob-promise';
 import {relative, resolve} from 'path';
@@ -7,7 +8,7 @@ import {MarkdownCodeExampleInserterError} from './errors/markdown-code-example-i
 import {OutOfDateInsertedCodeError} from './errors/out-of-date-inserted-code.error';
 import {isCodeUpdated, writeAllExamples} from './example-inserter/example-inserter';
 
-const forceIndexTrigger = '--index';
+export const forceIndexTrigger = '--index';
 const ignoreTrigger = '--ignore';
 const silentTrigger = '--silent';
 const checkOnlyTrigger = '--check';
@@ -35,7 +36,7 @@ export async function parseArgs(args: string[]): Promise<CliInputs> {
         } else if (arg === forceIndexTrigger) {
             lastArgWasForceIndexTrigger = true;
         } else if (lastArgWasForceIndexTrigger) {
-            forceIndex = arg;
+            forceIndex = replaceWithWindowsPathIfNeeded(arg);
             lastArgWasForceIndexTrigger = false;
         } else if (arg === ignoreTrigger) {
             lastArgWasIgnoreTrigger = true;

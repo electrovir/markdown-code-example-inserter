@@ -17,6 +17,8 @@ describe(parseArgs.name, () => {
         const paths = (await parseArgs(['./**/*.md'])).files;
         expect(paths).to.deep.equal([
             'README.md',
+            join('test-files', 'forced-index-example', 'complete.md'),
+            join('test-files', 'forced-index-example', 'incomplete.md'),
             join('test-files', 'full-package-example', 'README.expect.md'),
             join('test-files', 'full-package-example', 'README.md'),
             join('test-files', 'no-source-code', 'comment.md'),

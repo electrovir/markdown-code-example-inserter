@@ -1,5 +1,5 @@
-import {toPosixPath} from '@augment-vir/node-js';
-import {dirname, posix, relative} from 'path';
+import {getSystemRootPath, toPosixPath} from '@augment-vir/node-js';
+import {dirname, join, posix, relative} from 'path';
 import {ParsedCommandLine} from 'typescript';
 import {guessPackageIndex} from '../package-parsing/package-index';
 import {LanguageName} from './get-file-language-name';
@@ -23,10 +23,21 @@ export async function fixPackageImports(
 ): Promise<string> {
     let newCode = codeExample;
     const packageIndex = await guessPackageIndex(packageDir, overrideTsConfig, overridePackageJson);
+
     // fix imports
     if (packageIndex.replaceName) {
+        const forceIndexFullPath = forceIndexPath
+            ? forceIndexPath?.startsWith(getSystemRootPath())
+                ? forceIndexPath
+                : join(packageDir, forceIndexPath)
+            : '';
+
+        const relativePath = relative(
+            dirname(codePath),
+            forceIndexFullPath || packageIndex.indexPath,
+        );
         const regExpSafePosixPath = toPosixPath(
-            relative(dirname(codePath), forceIndexPath || packageIndex.indexPath),
+            relativePath.startsWith('.') ? relativePath : `./${relativePath}`,
         ).replace(/\./g, '\\.');
 
         const importFixer = languageImportFixMap[language];

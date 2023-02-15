@@ -16,6 +16,7 @@ export const noSourceCodeFiles = {
 };
 
 export const fullPackageExampleDir = join(testFilesDirPath, 'full-package-example');
+export const forcedIndexExampleDir = join(testFilesDirPath, 'forced-index-example');
 export const fullPackageExampleFiles = {
     readme: join(fullPackageExampleDir, 'README.md'),
     readmeExpectation: join(fullPackageExampleDir, 'README.expect.md'),
