@@ -67,7 +67,6 @@ export async function parseArgs(args: string[]): Promise<CliInputs> {
                     './**/node_modules/**',
                 ],
             });
-            console.log({globString, paths});
             if (paths.length) {
                 inputFiles.push(
                     ...paths.map((path) => {
