@@ -3,7 +3,7 @@ import {readFile} from 'fs-extra';
 import {MarkdownCodeExampleInserterError} from '../errors/markdown-code-example-inserter.error';
 import {noSourceCodeFiles} from '../repo-paths';
 import {linkCommentTriggerPhrase} from '../trigger-phrase';
-import {extractIndent, extractLinks, FullyPositionedNode} from './extract-links';
+import {FullyPositionedNode, extractIndent, extractLinks} from './extract-links';
 
 describe(extractLinks.name, () => {
     const expectedLinks: Readonly<string[]> = [

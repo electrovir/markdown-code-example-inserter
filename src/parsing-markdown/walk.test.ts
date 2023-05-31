@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import type {Literal, Node, Parent, Position} from 'unist';
 import {noSourceCodeFiles} from '../repo-paths';
 import {parseHtmlContents, parseMarkdownContents, parseMarkdownFile} from './parse-markdown';
-import {walk, WalkLanguages} from './walk';
+import {WalkLanguages, walk} from './walk';
 
 describe(walk.name, () => {
     async function getRootNode(filePath: string): Promise<Node> {
