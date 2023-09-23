@@ -1,31 +1,31 @@
 {
-    "full-package-example": {
-        "successful check": {
-            "stdout": "Checking that code in markdown is up to date:\n    README.expect.md: up to date\n",
-            "stderr": "",
-            "exitCode": 0
-        },
-        "failed check": {
-            "stdout": "Checking that code in markdown is up to date:\n    README.expect.md: up to date\n",
-            "stderr": "    README.md: NOT up to date\nCode in Markdown file(s) is out of date. Run without --check to update.\n",
-            "exitCode": 1
-        }
-    },
     "forced-index-example": {
         "forced-index-complete": {
-            "stdout": "Checking that code in markdown is up to date:\n    complete.md: up to date\n",
+            "exitCode": 0,
             "stderr": "",
-            "exitCode": 0
-        },
-        "forced-index-incomplete-reverted": {
-            "stdout": "Checking that code in markdown is up to date:\n",
-            "stderr": "    incomplete.md: NOT up to date\nCode in Markdown file(s) is out of date. Run without --check to update.\n",
-            "exitCode": 1
+            "stdout": "Checking that code in markdown is up to date:\n    complete.md: up to date\n"
         },
         "forced-index-incomplete-fix": {
-            "stdout": "Inserting code into markdown:\n    incomplete.md\n",
+            "exitCode": 0,
             "stderr": "",
-            "exitCode": 0
+            "stdout": "Inserting code into markdown:\n    incomplete.md\n"
+        },
+        "forced-index-incomplete-reverted": {
+            "exitCode": 1,
+            "stderr": "    incomplete.md: NOT up to date\nCode in Markdown file(s) is out of date. Run without --check to update.\n",
+            "stdout": "Checking that code in markdown is up to date:\n"
+        }
+    },
+    "full-package-example": {
+        "failed check": {
+            "exitCode": 1,
+            "stderr": "    README.md: NOT up to date\nCode in Markdown file(s) is out of date. Run without --check to update.\n",
+            "stdout": "Checking that code in markdown is up to date:\n    README.expect.md: up to date\n"
+        },
+        "successful check": {
+            "exitCode": 0,
+            "stderr": "",
+            "stdout": "Checking that code in markdown is up to date:\n    README.expect.md: up to date\n"
         }
     }
 }
