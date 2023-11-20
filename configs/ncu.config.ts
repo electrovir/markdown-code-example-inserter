@@ -6,6 +6,9 @@ export const ncuConfig: RunOptions = {
     // exclude these
     reject: [
         ...baseNcuConfig.reject,
+        '@types/hast',
+        '@types/mdast',
+        '@types/unist',
         'rehype-parse',
         'remark-parse',
         'remark-rehype',
