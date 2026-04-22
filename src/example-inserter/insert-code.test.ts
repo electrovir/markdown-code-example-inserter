@@ -1,6 +1,6 @@
 import {assert} from '@augment-vir/assert';
 import {describe, it} from '@augment-vir/test';
-import {CodeExampleLink} from '../parsing-markdown/extract-links.js';
+import {type CodeExampleLink} from '../parsing-markdown/extract-links.js';
 import {insertCodeExample, insertText, replaceTextRange} from './insert-code.js';
 
 describe(replaceTextRange.name, () => {
@@ -73,8 +73,12 @@ describe(insertCodeExample.name, () => {
             {
                 node: {
                     position: {
-                        start: {offset: 3},
-                        end: {offset: 3 + 'linked comment here'.length},
+                        start: {
+                            offset: 3,
+                        },
+                        end: {
+                            offset: 3 + 'linked comment here'.length,
+                        },
                     },
                 },
                 indent: '',
@@ -95,14 +99,22 @@ describe(insertCodeExample.name, () => {
             {
                 node: {
                     position: {
-                        start: {offset: 3},
-                        end: {offset: 22},
+                        start: {
+                            offset: 3,
+                        },
+                        end: {
+                            offset: 22,
+                        },
                     },
                 },
                 linkedCodeBlock: {
                     position: {
-                        start: {offset: 24},
-                        end: {offset: 62},
+                        start: {
+                            offset: 24,
+                        },
+                        end: {
+                            offset: 62,
+                        },
                     },
                 },
                 indent: '',

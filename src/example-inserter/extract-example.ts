@@ -2,7 +2,7 @@ import {existsSync} from 'node:fs';
 import {readFile} from 'node:fs/promises';
 import {dirname, resolve} from 'node:path';
 import {CodeExampleFileMissingError} from '../errors/code-example-file-missing.error.js';
-import {CodeExampleLink} from '../parsing-markdown/extract-links.js';
+import {type CodeExampleLink} from '../parsing-markdown/extract-links.js';
 
 export function extractExamplePath(
     originalMarkdownFilePath: string,

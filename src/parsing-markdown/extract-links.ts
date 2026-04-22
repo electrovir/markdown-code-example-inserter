@@ -89,7 +89,10 @@ export function extractLinks(
             assertFullyPositionedNode(node);
             const newNode = offsetNodePosition(node, lastHtmlNode.htmlNode);
             node = newNode;
-            commentData.push({comment: newNode, indent: lastHtmlNode.indent});
+            commentData.push({
+                comment: newNode,
+                indent: lastHtmlNode.indent,
+            });
         } else if (
             language === 'markdown' &&
             lastComment &&
@@ -146,11 +149,9 @@ function isHtmlNode(input: Node): input is Html {
 export function assertFullyPositionedNode(node: Node): asserts node is FullyPositionedNode {
     if (!node.position) {
         throw new InvalidNodeError(node, 'missing position property');
-    }
-    if (node.position.end.offset == undefined) {
+    } else if (node.position.end.offset == undefined) {
         throw new InvalidNodeError(node, 'missing end position offset');
-    }
-    if (node.position.start.offset == undefined) {
+    } else if (node.position.start.offset == undefined) {
         throw new InvalidNodeError(node, 'missing start position offset');
     }
 }

@@ -1,5 +1,5 @@
-import {CodeExampleLink} from '../parsing-markdown/extract-links.js';
-import {LanguageName} from './language-map.js';
+import {type CodeExampleLink} from '../parsing-markdown/extract-links.js';
+import {type LanguageName} from './language-map.js';
 
 const markdownCodeBlockWrapper = '```';
 
@@ -44,7 +44,12 @@ export function insertText(text: string, insertAtThisIndex: number, insertion: s
 
 export function replaceTextRange(
     text: string,
-    range: Readonly<[number, number]>,
+    range: Readonly<
+        [
+            number,
+            number,
+        ]
+    >,
     insertion: string,
 ): string {
     return text.slice(0, range[0]) + insertion + text.slice(range[1]);

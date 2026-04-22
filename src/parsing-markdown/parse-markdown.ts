@@ -8,7 +8,9 @@ import {unified} from 'unified';
 import type {Node} from 'unist';
 
 const markdownParser = unified().use(remarkParse).use(remarkRehype);
-const htmlParser = unified().use(rehypeParse, {fragment: true});
+const htmlParser = unified().use(rehypeParse, {
+    fragment: true,
+});
 
 export async function parseMarkdownFile(markdownFilePath: string): Promise<MarkdownRoot> {
     const fileContents = await readFile(markdownFilePath);

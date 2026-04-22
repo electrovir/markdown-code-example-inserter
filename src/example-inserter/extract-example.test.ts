@@ -1,7 +1,7 @@
 import {assert} from '@augment-vir/assert';
 import {describe, it} from '@augment-vir/test';
 import {CodeExampleFileMissingError} from '../errors/code-example-file-missing.error.js';
-import {CodeExampleLink} from '../parsing-markdown/extract-links.js';
+import {type CodeExampleLink} from '../parsing-markdown/extract-links.js';
 import {noSourceCodeFiles} from '../repo-paths.js';
 import {extractExamplePath} from './extract-example.js';
 

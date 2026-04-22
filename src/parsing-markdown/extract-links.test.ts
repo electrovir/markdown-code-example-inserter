@@ -4,7 +4,7 @@ import {readFile} from 'node:fs/promises';
 import {MarkdownCodeExampleInserterError} from '../errors/markdown-code-example-inserter.error.js';
 import {noSourceCodeFiles} from '../repo-paths.js';
 import {linkCommentTriggerPhrase} from '../trigger-phrase.js';
-import {FullyPositionedNode, extractIndent, extractLinks} from './extract-links.js';
+import {type FullyPositionedNode, extractIndent, extractLinks} from './extract-links.js';
 
 describe(extractLinks.name, () => {
     const expectedLinks: string[] = [
@@ -110,7 +110,11 @@ describe(extractIndent.name, () => {
     it("extracts no indent if the line text doesn't start with the node", () => {
         const indent = extractIndent('aaa derp', {
             value: 'derp',
-            position: {start: {column: 4}},
+            position: {
+                start: {
+                    column: 4,
+                },
+            },
         } as {value: unknown} & FullyPositionedNode);
 
         assert.strictEquals(indent, '');
@@ -119,7 +123,11 @@ describe(extractIndent.name, () => {
     it('extracts leading spaces when line starts with the node', () => {
         const indent = extractIndent('    derp', {
             value: 'derp',
-            position: {start: {column: 5}},
+            position: {
+                start: {
+                    column: 5,
+                },
+            },
         } as {value: unknown} & FullyPositionedNode);
 
         assert.strictEquals(indent, '    ');
@@ -128,7 +136,11 @@ describe(extractIndent.name, () => {
     it('extracts leading tabs when line starts with the node', () => {
         const indent = extractIndent('\t\t\t\tderp', {
             value: 'derp',
-            position: {start: {column: 5}},
+            position: {
+                start: {
+                    column: 5,
+                },
+            },
         } as {value: unknown} & FullyPositionedNode);
 
         assert.strictEquals(indent, '\t\t\t\t');

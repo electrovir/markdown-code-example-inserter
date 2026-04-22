@@ -1,5 +1,5 @@
 import {join} from 'node:path';
-import {ParsedCommandLine} from 'typescript';
+import {type ParsedCommandLine} from 'typescript';
 import {readPackageDetails} from './parse-package-json.js';
 import {getTsDirs} from './parse-tsconfig.js';
 

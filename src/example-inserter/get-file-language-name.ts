@@ -1,6 +1,6 @@
 import {getObjectTypedKeys} from '@augment-vir/common';
 import {extname} from 'node:path';
-import {LanguageEntry, languageMap, LanguageName} from './language-map.js';
+import {type LanguageEntry, languageMap, type LanguageName} from './language-map.js';
 
 // extensions that will never match any other language name
 const requiredLanguageExtension: Partial<Record<LanguageName, string>> = {

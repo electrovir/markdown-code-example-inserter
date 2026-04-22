@@ -1,8 +1,8 @@
 import {systemRootPath, toPosixPath} from '@augment-vir/node';
 import {dirname, join, posix, relative} from 'node:path';
-import {ParsedCommandLine} from 'typescript';
+import {type ParsedCommandLine} from 'typescript';
 import {guessPackageIndex} from '../package-parsing/package-index.js';
-import {LanguageName} from './language-map.js';
+import {type LanguageName} from './language-map.js';
 
 const languageImportFixMap: Partial<
     Record<LanguageName, (code: string, regExpSafePosixPath: string, replaceName: string) => string>

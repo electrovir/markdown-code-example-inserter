@@ -140,8 +140,15 @@ describe(runCli.name, () => {
     });
 
     it('cli errors when no arguments are given', async () => {
-        await assert.throws(() => runCli({rawArgs: [], cwd: fullPackageExampleDir}), {
-            matchConstructor: MarkdownCodeExampleInserterError,
-        });
+        await assert.throws(
+            () =>
+                runCli({
+                    rawArgs: [],
+                    cwd: fullPackageExampleDir,
+                }),
+            {
+                matchConstructor: MarkdownCodeExampleInserterError,
+            },
+        );
     });
 });

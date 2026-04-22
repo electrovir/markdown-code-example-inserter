@@ -1,7 +1,13 @@
 import {assert, check} from '@augment-vir/assert';
-import {addSuffix, mapObjectValues, removeColor, RuntimeEnv} from '@augment-vir/common';
-import {interpolationSafeWindowsPath, runShellCommand, ShellOutput} from '@augment-vir/node';
-import {assertTestContext, describe, it, UniversalTestContext} from '@augment-vir/test';
+import {addSuffix, mapObjectValues, removeColor} from '@augment-vir/common';
+import {interpolationSafeWindowsPath, runShellCommand, type ShellOutput} from '@augment-vir/node';
+import {
+    assertTestContext,
+    describe,
+    it,
+    TestEnv,
+    type UniversalTestContext,
+} from '@augment-vir/test';
 import {readFile, writeFile} from 'node:fs/promises';
 import {join, resolve, sep} from 'node:path';
 import {forceIndexTrigger} from './cli/run-cli.js';
@@ -35,13 +41,16 @@ async function runCli(
     delete result.error;
     delete result.exitSignal;
 
-    assertTestContext(context, RuntimeEnv.Node);
+    assertTestContext(context, TestEnv.Node);
 
     context.assert.snapshot(
         mapObjectValues(result, (key, value) => {
             if (check.isString(value)) {
                 return removeColor(value).replaceAll(
-                    addSuffix({value: repoRootDir, suffix: sep}),
+                    addSuffix({
+                        value: repoRootDir,
+                        suffix: sep,
+                    }),
                     '',
                 );
             } else {

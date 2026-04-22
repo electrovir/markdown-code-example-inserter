@@ -3,7 +3,7 @@ import {describe, it} from '@augment-vir/test';
 import type {Literal, Node, Parent, Position} from 'unist';
 import {noSourceCodeFiles} from '../repo-paths.js';
 import {parseHtmlContents, parseMarkdownContents, parseMarkdownFile} from './parse-markdown.js';
-import {WalkLanguages, walk} from './walk.js';
+import {type WalkLanguages, walk} from './walk.js';
 
 describe(walk.name, () => {
     async function getRootNode(filePath: string): Promise<Node> {

@@ -30,8 +30,7 @@ export function walk(
 
     if (callback(node, language)) {
         return true;
-    }
-    if ('children' in node) {
+    } else if ('children' in node) {
         return node.children.some((child) => {
             return walk(child, language, callback);
         });

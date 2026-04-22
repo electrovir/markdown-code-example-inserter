@@ -17,8 +17,15 @@ describe(guessPackageIndex.name, () => {
     it('uses the package dir as the rootDir when no root dir is given', async () => {
         const guessedIndex = await guessPackageIndex(
             noSourceCodeDir,
-            {options: {outDir: join(noSourceCodeDir, 'blah')}},
-            {name: 'test-name', main: 'blah/index.js'},
+            {
+                options: {
+                    outDir: join(noSourceCodeDir, 'blah'),
+                },
+            },
+            {
+                name: 'test-name',
+                main: 'blah/index.js',
+            },
         );
 
         assert.deepEquals(guessedIndex, {
@@ -51,8 +58,15 @@ describe(guessPackageIndex.name, () => {
     it('reads the index from rootDir when no outDir exists', async () => {
         const guessedIndex = await guessPackageIndex(
             noSourceCodeDir,
-            {options: {rootDir: join(noSourceCodeDir, 'blah')}},
-            {name: 'test-name', main: 'blah/index.js'},
+            {
+                options: {
+                    rootDir: join(noSourceCodeDir, 'blah'),
+                },
+            },
+            {
+                name: 'test-name',
+                main: 'blah/index.js',
+            },
         );
 
         assert.deepEquals(guessedIndex, {
@@ -64,8 +78,13 @@ describe(guessPackageIndex.name, () => {
     it('no mapping if no tsConfig dirs', async () => {
         const guessedIndex = await guessPackageIndex(
             noSourceCodeDir,
-            {options: {}},
-            {name: 'test-name', main: 'blah/index.js'},
+            {
+                options: {},
+            },
+            {
+                name: 'test-name',
+                main: 'blah/index.js',
+            },
         );
 
         assert.deepEquals(guessedIndex, {

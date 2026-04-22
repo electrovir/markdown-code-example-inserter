@@ -1,7 +1,7 @@
 import {replaceWithWindowsPathIfNeeded} from '@augment-vir/node';
 import {existsSync} from 'node:fs';
 import {join} from 'node:path';
-import {ParsedCommandLine, parseJsonConfigFileContent, readConfigFile, sys} from 'typescript';
+import {type ParsedCommandLine, parseJsonConfigFileContent, readConfigFile, sys} from 'typescript';
 
 export type TsDirs = {
     source: string | undefined;
@@ -21,7 +21,10 @@ export function getTsDirs(
     const source = replaceWithWindowsPathIfNeeded(configContent.options?.rootDir ?? '');
     const output = replaceWithWindowsPathIfNeeded(configContent.options?.outDir ?? '');
 
-    return {source, output};
+    return {
+        source,
+        output,
+    };
 }
 
 function findAndReadTSConfig(packageDir: string): ParsedCommandLine | undefined {
