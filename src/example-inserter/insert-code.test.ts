@@ -5,40 +5,40 @@ import {insertCodeExample, insertText, replaceTextRange} from './insert-code.js'
 
 describe(replaceTextRange.name, () => {
     it('replaces range within the given string', () => {
-        const replacedLines = replaceTextRange(
-            'a b c d e',
-            [
+        const replacedLines = replaceTextRange({
+            text: 'a b c d e',
+            range: [
                 4,
                 7,
             ],
-            'insertion',
-        );
+            insertion: 'insertion',
+        });
 
         assert.strictEquals(replacedLines, 'a b insertion e');
     });
 
     it('replaces at the beginning of the string', () => {
-        const replacedLines = replaceTextRange(
-            'a b c d e',
-            [
+        const replacedLines = replaceTextRange({
+            text: 'a b c d e',
+            range: [
                 0,
                 5,
             ],
-            'insertion',
-        );
+            insertion: 'insertion',
+        });
 
         assert.strictEquals(replacedLines, 'insertion d e');
     });
 
     it('replaces at the end of the string', () => {
-        const replacedLines = replaceTextRange(
-            'a b c d e',
-            [
+        const replacedLines = replaceTextRange({
+            text: 'a b c d e',
+            range: [
                 8,
                 9,
             ],
-            'insertion',
-        );
+            insertion: 'insertion',
+        });
 
         assert.strictEquals(replacedLines, 'a b c d insertion');
     });
@@ -46,19 +46,31 @@ describe(replaceTextRange.name, () => {
 
 describe(insertText.name, () => {
     it('inserts into the middle of a string', () => {
-        const replacedLines = insertText('a b c d e', 8, 'insertion ');
+        const replacedLines = insertText({
+            text: 'a b c d e',
+            insertAtThisIndex: 8,
+            insertion: 'insertion ',
+        });
 
         assert.strictEquals(replacedLines, 'a b c d insertion e');
     });
 
     it('inserts after the beginning of a string', () => {
-        const replacedLines = insertText('a b c d e', 0, 'insertion ');
+        const replacedLines = insertText({
+            text: 'a b c d e',
+            insertAtThisIndex: 0,
+            insertion: 'insertion ',
+        });
 
         assert.strictEquals(replacedLines, 'insertion a b c d e');
     });
 
     it('inserts at the end of a string', () => {
-        const replacedLines = insertText('a b c d e', 9, ' insertion');
+        const replacedLines = insertText({
+            text: 'a b c d e',
+            insertAtThisIndex: 9,
+            insertion: ' insertion',
+        });
 
         assert.strictEquals(replacedLines, 'a b c d e insertion');
     });
@@ -66,11 +78,11 @@ describe(insertText.name, () => {
 
 describe(insertCodeExample.name, () => {
     it('inserts code without a linked code block', () => {
-        const replacedLines = insertCodeExample(
-            'a\n\nlinked comment here\n\nc\n\nd\n\ne',
-            'TypeScript',
-            "console.info('derp');",
-            {
+        const replacedLines = insertCodeExample({
+            markdownText: 'a\n\nlinked comment here\n\nc\n\nd\n\ne',
+            language: 'TypeScript',
+            fixedCode: "console.info('derp');",
+            linkComment: {
                 node: {
                     position: {
                         start: {
@@ -83,7 +95,7 @@ describe(insertCodeExample.name, () => {
                 },
                 indent: '',
             } as Readonly<CodeExampleLink>,
-        );
+        });
 
         assert.strictEquals(
             replacedLines,
@@ -92,11 +104,12 @@ describe(insertCodeExample.name, () => {
     });
 
     it('replaces code block when its present after the linked comment', () => {
-        const replacedLines = insertCodeExample(
-            'a\n\nlinked comment here\n\ncode block here\n\ncode block still here\n\nb\n\nc',
-            'TypeScript',
-            "console.info('derp');",
-            {
+        const replacedLines = insertCodeExample({
+            markdownText:
+                'a\n\nlinked comment here\n\ncode block here\n\ncode block still here\n\nb\n\nc',
+            language: 'TypeScript',
+            fixedCode: "console.info('derp');",
+            linkComment: {
                 node: {
                     position: {
                         start: {
@@ -119,7 +132,7 @@ describe(insertCodeExample.name, () => {
                 },
                 indent: '',
             } as Readonly<CodeExampleLink>,
-        );
+        });
 
         assert.strictEquals(
             replacedLines,

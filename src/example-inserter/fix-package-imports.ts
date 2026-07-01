@@ -5,22 +5,33 @@ import {guessPackageIndex} from '../package-parsing/package-index.js';
 import {type LanguageName} from './language-map.js';
 
 const languageImportFixMap: Partial<
-    Record<LanguageName, (code: string, regExpSafePosixPath: string, replaceName: string) => string>
+    Record<
+        LanguageName,
+        (
+            input: Readonly<{code: string; regExpSafePosixPath: string; replaceName: string}>,
+        ) => string
+    >
 > = {
     TypeScript: fixTypescriptImports,
 };
 
-export async function fixPackageImports(
-    codeExample: string,
-    codePath: string,
-    packageDir: string,
-    forceIndexPath: string | undefined,
-    language: LanguageName = 'TypeScript',
-    /** For testing purposes. */
-    overrideTsConfig?: Partial<ParsedCommandLine>,
-    /** For testing purposes. */
-    overridePackageJson?: Record<string, string | undefined>,
-): Promise<string> {
+export async function fixPackageImports({
+    codeExample,
+    codePath,
+    packageDir,
+    forceIndexPath,
+    language = 'TypeScript',
+    overrideTsConfig,
+    overridePackageJson,
+}: Readonly<{
+    codeExample: string;
+    codePath: string;
+    packageDir: string;
+    forceIndexPath: string | undefined;
+    language?: LanguageName | undefined;
+    overrideTsConfig?: Partial<ParsedCommandLine> | undefined;
+    overridePackageJson?: Record<string, string | undefined> | undefined;
+}>): Promise<string> {
     let newCode = codeExample;
     const packageIndex = await guessPackageIndex(packageDir, overrideTsConfig, overridePackageJson);
 
@@ -43,18 +54,22 @@ export async function fixPackageImports(
         const importFixer = languageImportFixMap[language];
 
         if (importFixer) {
-            newCode = importFixer(newCode, regExpSafePosixPath, packageIndex.replaceName);
+            newCode = importFixer({
+                code: newCode,
+                regExpSafePosixPath,
+                replaceName: packageIndex.replaceName,
+            });
         }
     }
 
     return newCode;
 }
 
-function fixTypescriptImports(
-    code: string,
-    regExpSafePosixPath: string,
-    replaceName: string,
-): string {
+function fixTypescriptImports({
+    code,
+    regExpSafePosixPath,
+    replaceName,
+}: Readonly<{code: string; regExpSafePosixPath: string; replaceName: string}>): string {
     const indexFileImportRegExpPath = regExpSafePosixPath.replace(
         /\\\.\w+$/,
         String.raw`(?:\.[cm]?[jt]s[x]?)?`,

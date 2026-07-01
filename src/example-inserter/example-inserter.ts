@@ -12,11 +12,15 @@ import {insertCodeExample} from './insert-code.js';
  *
  * @category Internals
  */
-export async function generateAllExamples(
-    markdownPath: string,
-    packageDir: string,
-    forceIndexPath: string | undefined,
-): Promise<string> {
+export async function generateAllExamples({
+    markdownPath,
+    packageDir,
+    forceIndexPath,
+}: Readonly<{
+    markdownPath: string;
+    packageDir: string;
+    forceIndexPath: string | undefined;
+}>): Promise<string> {
     let markdownContents = (await readFile(markdownPath)).toString();
 
     await extractLinks(markdownContents)
@@ -30,20 +34,23 @@ export async function generateAllExamples(
             await lastPromise;
             const originalCode = (await extractExampleCode(markdownPath, linkComment)).toString();
             const language = getFileLanguageName(linkComment.linkPath);
-            const importFixedCode = await fixPackageImports(
-                originalCode,
-                join(packageDir, linkComment.linkPath),
+            const importFixedCode = await fixPackageImports({
+                codeExample: originalCode,
+                codePath: join(packageDir, linkComment.linkPath),
                 packageDir,
                 forceIndexPath,
                 language,
-            );
-            const indentFixedCode = fixCodeIndents(importFixedCode, linkComment.indent);
-            markdownContents = insertCodeExample(
-                markdownContents,
+            });
+            const indentFixedCode = fixCodeIndents({
+                rawCode: importFixedCode,
+                indent: linkComment.indent,
+            });
+            markdownContents = insertCodeExample({
+                markdownText: markdownContents,
                 language,
-                indentFixedCode,
+                fixedCode: indentFixedCode,
                 linkComment,
-            );
+            });
         }, Promise.resolve());
 
     return markdownContents;
@@ -54,13 +61,21 @@ export async function generateAllExamples(
  *
  * @category Main
  */
-export async function isCodeUpdated(
-    markdownPath: string,
-    packageDir: string,
-    forceIndexPath: string | undefined,
-): Promise<boolean> {
+export async function isCodeUpdated({
+    markdownPath,
+    packageDir,
+    forceIndexPath,
+}: Readonly<{
+    markdownPath: string;
+    packageDir: string;
+    forceIndexPath: string | undefined;
+}>): Promise<boolean> {
     const oldText = (await readFile(markdownPath)).toString();
-    const newText = await generateAllExamples(markdownPath, packageDir, forceIndexPath);
+    const newText = await generateAllExamples({
+        markdownPath,
+        packageDir,
+        forceIndexPath,
+    });
 
     return oldText === newText;
 }
@@ -70,11 +85,15 @@ export async function isCodeUpdated(
  *
  * @category Main
  */
-export async function writeAllExamples(
-    markdownPath: string,
-    packageDir: string,
-    forceIndexPath: string | undefined,
-) {
-    const newText = await generateAllExamples(markdownPath, packageDir, forceIndexPath);
+export async function writeAllExamples({
+    markdownPath,
+    packageDir,
+    forceIndexPath,
+}: Readonly<{markdownPath: string; packageDir: string; forceIndexPath: string | undefined}>) {
+    const newText = await generateAllExamples({
+        markdownPath,
+        packageDir,
+        forceIndexPath,
+    });
     await writeFile(markdownPath, newText);
 }

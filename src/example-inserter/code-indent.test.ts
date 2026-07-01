@@ -3,8 +3,11 @@ import {describe, it} from '@augment-vir/test';
 import {fixCodeIndents} from './code-indent.js';
 
 describe(fixCodeIndents.name, () => {
-    it('should add an indent', () => {
-        const replacedLines = fixCodeIndents('a b c d e', ' ');
+    it('adds an indent', () => {
+        const replacedLines = fixCodeIndents({
+            rawCode: 'a b c d e',
+            indent: ' ',
+        });
 
         assert.strictEquals(replacedLines, ' a b c d e');
     });

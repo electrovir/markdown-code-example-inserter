@@ -47,7 +47,7 @@ describe(extractLinks.name, () => {
         const links = extractLinks(await readFile(noSourceCodeFiles.linkWithCode));
         const firstLink = links[0];
         if (links.length !== 1 || !firstLink) {
-            throw new MarkdownCodeExampleInserterError(`Wrong links extracted`);
+            throw new MarkdownCodeExampleInserterError('Wrong links extracted');
         }
         assert.deepEquals(
             [
@@ -99,7 +99,7 @@ describe(extractLinks.name, () => {
         );
         const firstLink = links[0];
         if (links.length !== 1 || !firstLink) {
-            throw new MarkdownCodeExampleInserterError(`Wrong links extracted`);
+            throw new MarkdownCodeExampleInserterError('Wrong links extracted');
         }
 
         assert.strictEquals(firstLink.node.position.end.line, 2);

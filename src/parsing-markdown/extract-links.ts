@@ -72,7 +72,7 @@ export function extractLinks(
             if (!htmlLine) {
                 throw new InvalidNodeError(
                     node,
-                    `this Html node's position.start.line is not actually a valid line number from the file it's in`,
+                    "this Html node's position.start.line is not actually a valid line number from the file it's in",
                 );
             }
             lastHtmlNode = {

@@ -63,7 +63,7 @@ describe(walk.name, () => {
         }[] = [];
 
         walk(
-            parseMarkdownContents(`## stuff\n<!-- \n comment here \n -->\n### more stuff`),
+            parseMarkdownContents('## stuff\n<!-- \n comment here \n -->\n### more stuff'),
             'markdown',
             (node, language) => {
                 positions.push({

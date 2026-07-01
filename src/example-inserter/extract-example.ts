@@ -10,7 +10,10 @@ export function extractExamplePath(
 ): string {
     const codeExamplePath = resolve(dirname(originalMarkdownFilePath), linkComment.linkPath);
     if (!existsSync(codeExamplePath)) {
-        throw new CodeExampleFileMissingError(codeExamplePath, originalMarkdownFilePath);
+        throw new CodeExampleFileMissingError({
+            missingFilePath: codeExamplePath,
+            source: originalMarkdownFilePath,
+        });
     }
 
     return codeExamplePath;

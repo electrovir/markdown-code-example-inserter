@@ -1,4 +1,4 @@
-exports[`cli.js > should produce correct output when a check fails 1`] = `
+exports[`cli.js > produces correct output when a check fails 1`] = `
 {
   "stdout": "Checking that code in markdown is up to date:\\n    README.expect.md: up to date\\n",
   "stderr": "    README.md: NOT up to date\\nCode in Markdown file(s) is out of date. Run without --check to update.\\n",
@@ -6,7 +6,7 @@ exports[`cli.js > should produce correct output when a check fails 1`] = `
 }
 `;
 
-exports[`cli.js > should produce correct output when a check passes 1`] = `
+exports[`cli.js > produces correct output when a check passes 1`] = `
 {
   "stdout": "Checking that code in markdown is up to date:\\n    README.expect.md: up to date\\n",
   "stderr": "",

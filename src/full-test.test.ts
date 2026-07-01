@@ -67,7 +67,7 @@ async function runCli(
 }
 
 describe('cli.js', () => {
-    it('should produce correct output when a check passes', async (context) => {
+    it('produces correct output when a check passes', async (context) => {
         await runCli(context, {
             args: [
                 fullPackageExampleFiles.readmeExpectation,
@@ -79,7 +79,7 @@ describe('cli.js', () => {
         });
     });
 
-    it('should produce correct output when a check fails', async (context) => {
+    it('produces correct output when a check fails', async (context) => {
         await runCli(context, {
             args: [
                 join(fullPackageExampleDir, '*.md'),

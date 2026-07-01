@@ -129,7 +129,7 @@ describe(runCli.name, () => {
     });
 
     it('cli --check does not error when code is up to date', async () => {
-        await runCli({
+        const result = await runCli({
             rawArgs: [
                 fullPackageExampleFiles.readmeExpectation,
                 '--silent',
@@ -137,6 +137,8 @@ describe(runCli.name, () => {
             ],
             cwd: fullPackageExampleDir,
         });
+
+        assert.isUndefined(result);
     });
 
     it('cli errors when no arguments are given', async () => {

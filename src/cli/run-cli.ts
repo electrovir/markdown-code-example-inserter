@@ -133,9 +133,9 @@ export async function runCli({
     }
     if (!args.silent) {
         if (args.checkOnly) {
-            console.info(`Checking that code in markdown is up to date:`);
+            console.info('Checking that code in markdown is up to date:');
         } else {
-            console.info(`Inserting code into markdown:`);
+            console.info('Inserting code into markdown:');
         }
     }
     const errors: Error[] = [];
@@ -145,11 +145,11 @@ export async function runCli({
         args.files.map(async (relativeFilePath, index) => {
             try {
                 if (args.checkOnly) {
-                    const upToDate = await isCodeUpdated(
-                        resolve(relativeFilePath),
-                        cwd,
-                        args.forceIndex,
-                    );
+                    const upToDate = await isCodeUpdated({
+                        markdownPath: resolve(relativeFilePath),
+                        packageDir: cwd,
+                        forceIndexPath: args.forceIndex,
+                    });
                     if (upToDate) {
                         if (!args.silent) {
                             orderedLog(index, console.info, `    ${relativeFilePath}: up to date`);
@@ -172,7 +172,11 @@ export async function runCli({
                     if (!args.silent) {
                         orderedLog(index, console.info, `    ${relativeFilePath}`);
                     }
-                    await writeAllExamples(resolve(relativeFilePath), cwd, args.forceIndex);
+                    await writeAllExamples({
+                        markdownPath: resolve(relativeFilePath),
+                        packageDir: cwd,
+                        forceIndexPath: args.forceIndex,
+                    });
                 }
             } catch (error) {
                 const errorWrapper = new MarkdownCodeExampleInserterError(
@@ -186,7 +190,6 @@ export async function runCli({
     if (errors.length) {
         if (
             /** Weird necessary as cast to prevent TypeScript's over-exuberant type guarding. */
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
             (errors as Error[]).every(
                 (error): error is OutOfDateInsertedCodeError =>
                     error instanceof OutOfDateInsertedCodeError,
@@ -197,7 +200,7 @@ export async function runCli({
             );
         } else {
             errors.forEach((error) => console.error(error));
-            throw new MarkdownCodeExampleInserterError(`Code insertion into Markdown failed.`);
+            throw new MarkdownCodeExampleInserterError('Code insertion into Markdown failed.');
         }
     }
 }

@@ -1,4 +1,7 @@
-export function fixCodeIndents(rawCode: string, indent: string): string {
+export function fixCodeIndents({
+    rawCode,
+    indent,
+}: Readonly<{rawCode: string; indent: string}>): string {
     const code = rawCode.trim();
     if (!indent) {
         return code;

@@ -27,7 +27,7 @@ describe('markdown parsing', () => {
     });
 
     it('smoke test parsed node creation', () => {
-        const parsed = parseHtmlContents(`<!-- comment is here -->`);
+        const parsed = parseHtmlContents('<!-- comment is here -->');
         // prevent excessive depth checking in nodes
         delete (parsed as Partial<Parent>).children;
         assert.deepEquals(parsed as Partial<Parent>, {
