@@ -1,7 +1,7 @@
 import {assert} from '@augment-vir/assert';
 import {describe, it} from '@augment-vir/test';
 import {readFile} from 'node:fs/promises';
-import {fullPackageExampleDir, fullPackageExampleFiles} from '../repo-paths.js';
+import {fullPackageExampleDir, fullPackageExampleFiles} from '../repo-paths.mock.js';
 import {generateAllExamples, isCodeUpdated} from './example-inserter.js';
 
 describe(generateAllExamples.name, () => {

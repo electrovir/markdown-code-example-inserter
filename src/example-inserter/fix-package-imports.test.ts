@@ -1,7 +1,8 @@
 import {assert} from '@augment-vir/assert';
 import {describe, it} from '@augment-vir/test';
+import {readFile} from 'node:fs/promises';
 import {join} from 'node:path';
-import {noSourceCodeDir} from '../repo-paths.js';
+import {noSourceCodeDir, subPathImportExampleDir} from '../repo-paths.mock.js';
 import {fixPackageImports} from './fix-package-imports.js';
 
 describe(fixPackageImports.name, () => {
@@ -117,6 +118,35 @@ describe(fixPackageImports.name, () => {
             newCode,
             `import blah from 'derp';
                     const thingie = ['yo hi there', 'hello to you too'];`,
+        );
+    });
+
+    it('fixes published sub path imports but not unpublished ones', async () => {
+        const codePath = join(
+            subPathImportExampleDir,
+            'src',
+            'readme-examples',
+            'sub-path-import.example.ts',
+        );
+        const newCode = await fixPackageImports({
+            codeExample: String(await readFile(codePath)),
+            codePath,
+            packageDir: subPathImportExampleDir,
+            forceIndexPath: undefined,
+        });
+
+        assert.strictEquals(
+            newCode,
+            [
+                "import {doThing} from 'sub-path-import-example';",
+                "import {doNestedThing} from 'sub-path-import-example/dist/nested/index.js';",
+                "import {doOtherThing} from 'sub-path-import-example/dist/nested/other.js';",
+                "import {sharedValue} from './shared.example.js';",
+                "import {otherSharedValue} from './shared.example.ts';",
+                '',
+                'console.info(doThing(), doNestedThing(), doOtherThing(), sharedValue, otherSharedValue);',
+                '',
+            ].join('\n'),
         );
     });
 });

@@ -4,7 +4,7 @@ import {readFile, writeFile} from 'node:fs/promises';
 import {join} from 'node:path';
 import {MarkdownCodeExampleInserterError} from '../errors/markdown-code-example-inserter.error.js';
 import {OutOfDateInsertedCodeError} from '../errors/out-of-date-inserted-code.error.js';
-import {fullPackageExampleDir, fullPackageExampleFiles} from '../repo-paths.js';
+import {fullPackageExampleDir, fullPackageExampleFiles} from '../repo-paths.mock.js';
 import {parseArgs, runCli} from './run-cli.js';
 
 describe(parseArgs.name, () => {

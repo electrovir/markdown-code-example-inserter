@@ -16,7 +16,7 @@ import {
     fullPackageExampleDir,
     fullPackageExampleFiles,
     repoRootDir,
-} from './repo-paths.js';
+} from './repo-paths.mock.js';
 
 async function runCli(
     context: UniversalTestContext,

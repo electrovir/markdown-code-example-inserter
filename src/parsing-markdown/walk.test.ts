@@ -1,7 +1,7 @@
 import {assert} from '@augment-vir/assert';
 import {describe, it} from '@augment-vir/test';
 import type {Literal, Node, Parent, Position} from 'unist';
-import {noSourceCodeFiles} from '../repo-paths.js';
+import {noSourceCodeFiles} from '../repo-paths.mock.js';
 import {parseHtmlContents, parseMarkdownContents, parseMarkdownFile} from './parse-markdown.js';
 import {type WalkLanguages, walk} from './walk.js';
 

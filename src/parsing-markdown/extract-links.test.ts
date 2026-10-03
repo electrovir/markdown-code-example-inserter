@@ -2,7 +2,7 @@ import {assert} from '@augment-vir/assert';
 import {describe, it} from '@augment-vir/test';
 import {readFile} from 'node:fs/promises';
 import {MarkdownCodeExampleInserterError} from '../errors/markdown-code-example-inserter.error.js';
-import {noSourceCodeFiles} from '../repo-paths.js';
+import {noSourceCodeFiles} from '../repo-paths.mock.js';
 import {linkCommentTriggerPhrase} from '../trigger-phrase.js';
 import {type FullyPositionedNode, extractIndent, extractLinks} from './extract-links.js';
 

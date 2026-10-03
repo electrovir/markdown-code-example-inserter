@@ -27,3 +27,5 @@ export const extendingTsConfigFiles = {
     sourceDir: join(extendingTsConfigDir, 'src'),
     distDir: join(extendingTsConfigDir, 'dist'),
 };
+
+export const subPathImportExampleDir = join(testFilesDirPath, 'sub-path-import-example');

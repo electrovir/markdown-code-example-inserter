@@ -1,7 +1,7 @@
 import {assert} from '@augment-vir/assert';
 import {describe, it} from '@augment-vir/test';
 import {join} from 'node:path';
-import {fullPackageExampleDir, noSourceCodeDir} from '../repo-paths.js';
+import {fullPackageExampleDir, noSourceCodeDir} from '../repo-paths.mock.js';
 import {readPackageDetails} from './parse-package-json.js';
 
 describe(readPackageDetails.name, () => {

@@ -1,7 +1,7 @@
 import {assert} from '@augment-vir/assert';
 import {describe, it} from '@augment-vir/test';
 import type {Parent} from 'unist';
-import {noSourceCodeFiles} from '../repo-paths.js';
+import {noSourceCodeFiles} from '../repo-paths.mock.js';
 import {parseHtmlContents, parseMarkdownFile} from './parse-markdown.js';
 
 describe('markdown parsing', () => {

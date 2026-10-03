@@ -1,7 +1,7 @@
 import {assert} from '@augment-vir/assert';
 import {describe, it} from '@augment-vir/test';
 import {join} from 'node:path';
-import {extendingTsConfigDir, extendingTsConfigFiles, noSourceCodeDir} from '../repo-paths.js';
+import {extendingTsConfigDir, extendingTsConfigFiles, noSourceCodeDir} from '../repo-paths.mock.js';
 import {guessPackageIndex} from './package-index.js';
 
 describe(guessPackageIndex.name, () => {

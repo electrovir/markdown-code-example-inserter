@@ -1,6 +1,6 @@
 import {assert} from '@augment-vir/assert';
 import {describe, it} from '@augment-vir/test';
-import {extendingTsConfigDir, extendingTsConfigFiles, noSourceCodeDir} from '../repo-paths.js';
+import {extendingTsConfigDir, extendingTsConfigFiles, noSourceCodeDir} from '../repo-paths.mock.js';
 import {getTsDirs} from './parse-tsconfig.js';
 
 describe(getTsDirs.name, () => {
