@@ -190,10 +190,9 @@ export async function runCli({
     if (errors.length) {
         if (
             /** Weird necessary as cast to prevent TypeScript's over-exuberant type guarding. */
-            (errors as Error[]).every(
-                (error): error is OutOfDateInsertedCodeError =>
-                    error instanceof OutOfDateInsertedCodeError,
-            )
+            (errors as Error[]).every((error): error is OutOfDateInsertedCodeError => {
+                return error instanceof OutOfDateInsertedCodeError;
+            })
         ) {
             throw new OutOfDateInsertedCodeError(
                 'Code in Markdown file(s) is out of date. Run without --check to update.',

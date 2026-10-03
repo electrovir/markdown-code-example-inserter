@@ -34,7 +34,7 @@ export function walk(
         return node.children.some((child) => {
             return walk(child, language, callback);
         });
+    } else {
+        return false;
     }
-
-    return false;
 }

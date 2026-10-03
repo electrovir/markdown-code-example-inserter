@@ -17,12 +17,12 @@ describe(extractLinks.name, () => {
 
         const joinedLinks = links.map((link) => link.node.value.trim());
 
-        const expectation = expectedLinks.map((message) =>
-            [
+        const expectation = expectedLinks.map((message) => {
+            return [
                 linkCommentTriggerPhrase,
                 message,
-            ].join(' '),
-        );
+            ].join(' ');
+        });
 
         assert.deepEquals(joinedLinks, expectation);
     });

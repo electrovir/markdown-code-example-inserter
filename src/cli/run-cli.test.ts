@@ -113,15 +113,16 @@ describe(runCli.name, () => {
 
     it('cli --check errors when not update to date', async () => {
         await assert.throws(
-            () =>
-                runCli({
+            () => {
+                return runCli({
                     rawArgs: [
                         fullPackageExampleFiles.readme,
                         '--silent',
                         '--check',
                     ],
                     cwd: fullPackageExampleDir,
-                }),
+                });
+            },
             {
                 matchConstructor: OutOfDateInsertedCodeError,
             },
@@ -143,11 +144,12 @@ describe(runCli.name, () => {
 
     it('cli errors when no arguments are given', async () => {
         await assert.throws(
-            () =>
-                runCli({
+            () => {
+                return runCli({
                     rawArgs: [],
                     cwd: fullPackageExampleDir,
-                }),
+                });
+            },
             {
                 matchConstructor: MarkdownCodeExampleInserterError,
             },
