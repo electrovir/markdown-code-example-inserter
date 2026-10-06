@@ -21,6 +21,8 @@ describe(parseArgs.name, () => {
             join('test-files', 'forced-index-example', 'incomplete.md'),
             join('test-files', 'full-package-example', 'README.expect.md'),
             join('test-files', 'full-package-example', 'README.md'),
+            join('test-files', 'monorepo-example', 'README.expect.md'),
+            join('test-files', 'monorepo-example', 'README.md'),
             join('test-files', 'no-source-code', 'comment.md'),
             join('test-files', 'no-source-code', 'invalid-link-comments.md'),
             join('test-files', 'no-source-code', 'link-paths.md'),

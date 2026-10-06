@@ -1,5 +1,6 @@
 import {readFile, writeFile} from 'node:fs/promises';
 import {join} from 'node:path';
+import {findPackageDir} from '../package-parsing/find-package-dir.js';
 import {extractLinks} from '../parsing-markdown/extract-links.js';
 import {fixCodeIndents} from './code-indent.js';
 import {extractExampleCode} from './extract-example.js';
@@ -34,10 +35,16 @@ export async function generateAllExamples({
             await lastPromise;
             const originalCode = (await extractExampleCode(markdownPath, linkComment)).toString();
             const language = getFileLanguageName(linkComment.linkPath);
+            const codePath = join(packageDir, linkComment.linkPath);
             const importFixedCode = await fixPackageImports({
                 codeExample: originalCode,
-                codePath: join(packageDir, linkComment.linkPath),
-                packageDir,
+                codePath,
+                packageDir: forceIndexPath
+                    ? packageDir
+                    : await findPackageDir({
+                          filePath: codePath,
+                          rootDir: packageDir,
+                      }),
                 forceIndexPath,
                 language,
             });

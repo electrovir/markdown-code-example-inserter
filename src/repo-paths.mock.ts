@@ -29,3 +29,9 @@ export const extendingTsConfigFiles = {
 };
 
 export const subPathImportExampleDir = join(testFilesDirPath, 'sub-path-import-example');
+
+export const monorepoExampleDir = join(testFilesDirPath, 'monorepo-example');
+export const monorepoExampleFiles = {
+    readme: join(monorepoExampleDir, 'README.md'),
+    readmeExpectation: join(monorepoExampleDir, 'README.expect.md'),
+};

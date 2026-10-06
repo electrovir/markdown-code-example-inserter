@@ -1,7 +1,12 @@
 import {assert} from '@augment-vir/assert';
 import {describe, it} from '@augment-vir/test';
 import {readFile} from 'node:fs/promises';
-import {fullPackageExampleDir, fullPackageExampleFiles} from '../repo-paths.mock.js';
+import {
+    fullPackageExampleDir,
+    fullPackageExampleFiles,
+    monorepoExampleDir,
+    monorepoExampleFiles,
+} from '../repo-paths.mock.js';
 import {generateAllExamples, isCodeUpdated} from './example-inserter.js';
 
 describe(generateAllExamples.name, () => {
@@ -13,6 +18,17 @@ describe(generateAllExamples.name, () => {
         });
 
         const expectation = (await readFile(fullPackageExampleFiles.readmeExpectation)).toString();
+
+        assert.strictEquals(codeInsertedMarkdown, expectation);
+    });
+    it('uses the workspace package that contains each example', async () => {
+        const codeInsertedMarkdown = await generateAllExamples({
+            markdownPath: monorepoExampleFiles.readme,
+            packageDir: monorepoExampleDir,
+            forceIndexPath: undefined,
+        });
+
+        const expectation = (await readFile(monorepoExampleFiles.readmeExpectation)).toString();
 
         assert.strictEquals(codeInsertedMarkdown, expectation);
     });
