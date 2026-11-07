@@ -1,3 +1,4 @@
+import {assertWrap} from '@augment-vir/assert';
 import {runShellCommand} from '@augment-vir/node';
 import {join} from 'node:path';
 
@@ -20,6 +21,12 @@ export async function readPublishedFiles(packageDir: string) {
     return await publishedFiles;
 }
 
+type PackResult = {
+    files: {
+        path: string;
+    }[];
+};
+
 async function packPublishedFiles(packageDir: string) {
     const output = await runShellCommand('npm pack --dry-run --json --ignore-scripts', {
         cwd: packageDir,
@@ -29,13 +36,11 @@ async function packPublishedFiles(packageDir: string) {
         return [];
     }
 
-    const packResults: [
-        {
-            files: {
-                path: string;
-            }[];
-        },
-    ] = JSON.parse(output.stdout);
+    /** Npm 12 keys the results by package name. Older npm versions output an array. */
+    const packResults: Readonly<Record<string, PackResult>> | ReadonlyArray<PackResult> =
+        JSON.parse(output.stdout);
 
-    return packResults[0].files.map((file) => join(packageDir, file.path));
+    return assertWrap
+        .isDefined(Object.values(packResults)[0])
+        .files.map((file) => join(packageDir, file.path));
 }
